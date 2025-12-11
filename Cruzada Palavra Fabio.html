@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo Neon Portugues</title>
+<style>
+body { margin:0; font-family:'Comic Sans MS', cursive, sans-serif; background:#1a1a1a; color:#fff; transition:0.3s; }
+header { text-align:center; padding:20px; font-size:2em; font-weight:bold; background:linear-gradient(90deg,#ff6ec7,#42d1f5); text-shadow:0 0 5px #fff,0 0 10px #ff6ec7,0 0 20px #42d1f5; }
+button { padding:10px 18px; margin:8px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; color:#fff; background:linear-gradient(90deg,#ff6ec7,#42d1f5); transition:0.3s; }
+button:hover { background:linear-gradient(90deg,#42d1f5,#ff6ec7); box-shadow:0 0 15px #fff; }
+.screen { display:none; min-height:80vh; flex-direction:column; align-items:center; justify-content:center; }
+.screen.active { display:flex; }
+.level-node, .player-node { width:140px; height:50px; line-height:50px; border-radius:10px; background:linear-gradient(90deg,#ff6ec7,#42d1f5); text-align:center; font-weight:bold; cursor:pointer; margin:10px; }
+.level-node:hover, .player-node:hover { box-shadow:0 0 20px #42d1f5; }
+#game-container { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
+#game-panel { display:flex; flex-direction:column; align-items:center; }
+.crossword { display:grid; grid-gap:5px; background:#111; padding:15px; border-radius:10px; }
+.cell { width:50px; height:50px; line-height:50px; text-align:center; font-weight:bold; font-size:22px; border-radius:6px; background:#2222ff33; cursor:pointer; box-shadow:0 0 5px #42d1f5; transition:0.2s; }
+.cell:hover { background:#2222ff66; }
+.number-panel { display:flex; flex-wrap:wrap; gap:8px; max-width:270px; margin-top:15px; }
+.number { width:50px; height:50px; line-height:50px; text-align:center; font-size:20px; border-radius:8px; background:#ff6ec7; cursor:pointer; box-shadow:0 0 5px #fff; transition:0.2s; }
+.number:hover { background:#42d1f5; box-shadow:0 0 20px #42d1f5; }
+.selected-panel-number { outline:3px solid #00ffea; }
+.result { margin-top:15px; padding:10px; border-radius:5px; font-weight:bold; font-size:1.2em; }
+.success { color:#00ff7f; background-color:#003300aa; }
+.error { color:#ff4500; background-color:#330000aa; }
+#ranking-panel { width:180px; background:#111; padding:10px; border-radius:10px; box-shadow:0 0 10px #fff; }
+#ranking-panel h3 { text-align:center; margin:5px 0; }
+.rank-entry { margin:5px 0; font-weight:bold; }
+#credits { font-size:1.5em; text-align:center; animation:scrollCredits 20s linear forwards; }
+@keyframes scrollCredits { 0% { transform:translateY(100%);} 100% { transform:translateY(-100%);} }
+</style>
+</head>
+<body>
+
+<header>Jogo Neon Portugues</header>
+
+<div class="screen active" id="player-select">
+    <h2>Escolha seu jogador</h2>
+    <div class="player-node" onclick="selectPlayer(1)">Jogador 1</div>
+    <div class="player-node" onclick="selectPlayer(2)">Jogador 2</div>
+    <div class="player-node" onclick="selectPlayer(3)">Jogador 3</div>
+</div>
+
+<div class="screen" id="level-select">
+    <h2>Escolha o nível</h2>
+    <div class="level-node" onclick="startGame('medium')">Medio</div>
+    <div class="level-node" onclick="startGame('hard')">Dificil</div>
+</div>
+
+<div class="screen" id="game">
+    <div id="game-container">
+        <div id="game-panel">
+            <div class="equations-bar" id="equations-bar"></div>
+            <div class="crossword" id="crossword"></div>
+            <div class="number-panel" id="panel"></div>
+            <div class="settings">
+                <button onclick="backToLevel()">⬅ Voltar</button>
+                <button onclick="toggleDarkMode()">Modo Claro/Escuro</button>
+                <button onclick="verificar()">Verificar</button>
+                <button onclick="showExplanation()">Explicacao</button>
+                <button onclick="nextPhase()">Proxima Fase</button>
+            </div>
+            <div id="result" class="result"></div>
+        </div>
+        <div id="ranking-panel">
+            <h3>Ranking</h3>
+            <div id="ranking-list"></div>
+        </div>
+    </div>
+</div>
+
+<div class="screen" id="winner-screen">
+    <h2>🏆 Vencedor da competicao 🏆</h2>
+    <p id="winner-name"></p>
+    <button onclick="showCredits()">Ver Creditos</button>
+</div>
+
+<div class="screen" id="credits">
+    <p>🎉 Jogo criado por: Fabio</p>
+    <p>Por que jogar este jogo?</p>
+    <p>✅ Melhora raciocinio e vocabulario</p>
+    <p>✅ Treina interpretacao e logica em portugues</p>
+    <p>✅ Compete com amigos e aprende jogando</p>
+    <p>Obrigado por jogar! 🏆</p>
+</div>
+
+<script>
+// Remove acentos e deixa minusculo
+function normalize(str){ return str.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase(); }
+
+let levels = {
+    medium: [
+        {q:'Qual e o antonimo de "rapido"?',res:['lento']},
+        {q:'Complete a palavra: C__rto',res:['e']},
+        {q:'Qual e o plural de "fossil"?',res:['fosseis']},
+        {q:'Sinonimo de "feliz"?',res:['contente']},
+        {q:'Qual palavra completa a charada: Sempre na frente, mas nao se move. O que e?',res:['futuro']},
+        {q:'Qual o feminino de "ator"?',res:['atriz']},
+        {q:'Qual e a forma correta: "Houveram problemas" ou "Houve problemas"?',res:['houve']},
+        {q:'Qual palavra tem o mesmo som de "censo"?',res:['senso']},
+        {q:'Complete: O gato esta em cima ___ mesa',res:['da']},
+        {q:'Charada: Tem dentes mas nao morde. O que e?',res:['pente']}
+    ],
+    hard: [
+        {q:'Complete o proverbio: "Agua mole em pedra ___"',res:['dura']},
+        {q:'Sinonimo de "perspicaz"?',res:['astuto']},
+        {q:'Antonimo de "abundante"?',res:['escasso']},
+        {q:'Qual a forma correta: "mais melhor" ou "melhor"?',res:['melhor']},
+        {q:'Charada: Quanto mais se tira, maior fica. O que e?',res:['buraco']},
+        {q:'Plural de "consul"?',res:['consules']},
+        {q:'Qual e o plural de "pais"?',res:['paises']},
+        {q:'Complete a frase: "Ele gosta ___ chocolate"',res:['de']},
+        {q:'Qual a forma correta: "Mau" ou "Mal"?',res:['mal']},
+        {q:'Charada: Estou cheio de buracos mas consigo segurar agua. O que sou?',res:['esponja']}
+    ]
+};
+
+let currentPlayer=1, playerScores=[0,0,0], difficulty='', currentPhase=0, selectedLetter=null, locked=false;
+
+function selectPlayer(n){
+    currentPlayer=n;
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('level-select').classList.add('active');
+}
+
+function backToLevel(){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('level-select').classList.add('active');
+}
+
+function startGame(level){
+    difficulty=level;
+    currentPhase=0;
+    locked=false;
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('game').classList.add('active');
+    loadPhase();
+    updateRanking();
+}
+
+function loadPhase(){
+    locked=false;
+    const phase = levels[difficulty][currentPhase];
+    const bar = document.getElementById('equations-bar');
+    const crossword = document.getElementById('crossword');
+    const panel = document.getElementById('panel');
+    bar.innerHTML=''; crossword.innerHTML=''; panel.innerHTML=''; phase.cells=[];
+
+    const eqDiv = document.createElement('div');
+    eqDiv.classList.add('equation');
+    eqDiv.textContent = phase.q;
+    bar.appendChild(eqDiv);
+
+    let letters = normalize(phase.res[0]).split('');
+    crossword.style.gridTemplateColumns = `repeat(${letters.length},50px)`;
+    letters.forEach(l=>{
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        crossword.appendChild(cell);
+        phase.cells.push(cell);
+    });
+
+    // Letras A-Z
+    for(let c=65;c<=90;c++){
+        const letter = String.fromCharCode(c);
+        const div = document.createElement('div');
+        div.classList.add('number');
+        div.textContent = letter;
+        div.onclick = ()=>selectLetter(letter,div);
+        panel.appendChild(div);
+    }
+
+    document.getElementById('result').textContent = `Jogador ${currentPlayer} - Pergunta ${currentPhase+1} de 10`;
+}
+
+function selectLetter(letter,div){
+    if(locked) return;
+    document.querySelectorAll('.number').forEach(el=>el.classList.remove('selected-panel-number'));
+    div.classList.add('selected-panel-number');
+    selectedLetter=letter;
+}
+
+document.addEventListener('click',e=>{
+    if(e.target.classList.contains('cell') && selectedLetter!==null && !locked){
+        e.target.textContent=selectedLetter;
+        document.querySelectorAll('.number').forEach(el=>el.classList.remove('selected-panel-number'));
+        selectedLetter=null;
+    }
+});
+
+function verificar(){
+    const phase = levels[difficulty][currentPhase];
+    const resDiv = document.getElementById('result');
+    let correct = phase.cells.every((c,i)=>normalize(c.textContent)===normalize(phase.res[0][i]));
+    resDiv.classList.remove('success','error');
+    if(correct){
+        playerScores[currentPlayer-1]+=10;
+        resDiv.textContent=`✅ Correto! Pontos: ${playerScores[currentPlayer-1]}`;
+        resDiv.classList.add('success');
+        locked=true;
+    } else{
+        resDiv.textContent=`❌ Incorreto. Pontos: ${playerScores[currentPlayer-1]}`;
+        resDiv.classList.add('error');
+    }
+    updateRanking();
+}
+
+function nextPhase(){
+    const phase = levels[difficulty][currentPhase];
+    let phaseCorrect = phase.cells.every((c,i)=>normalize(c.textContent)===normalize(phase.res[0][i]));
+    if(!phaseCorrect){ alert('Preencha a resposta corretamente antes de avancar!'); return; }
+
+    currentPhase++;
+    if(currentPhase>=10){
+        if(currentPlayer<3){
+            currentPlayer++;
+            currentPhase=0;
+            startGame(difficulty);
+        } else { showWinner(); }
+    } else { loadPhase(); }
+}
+
+function showExplanation(){
+    const phase = levels[difficulty][currentPhase];
+    alert(`Pergunta: ${phase.q}\nResposta: ${phase.res[0]}`);
+}
+
+function updateRanking(){
+    const rankDiv = document.getElementById('ranking-list');
+    rankDiv.innerHTML='';
+    const maxScore = Math.max(...playerScores);
+    for(let i=0;i<3;i++){
+        let icon='';
+        if(playerScores[i]===maxScore){ icon=i===0?'🥇':i===1?'🥈':'🥉'; }
+        rankDiv.innerHTML+=`<div class="rank-entry">${icon} Jogador ${i+1}: ${playerScores[i]} pts</div>`;
+    }
+}
+
+function showWinner(){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('winner-screen').classList.add('active');
+    const maxScore = Math.max(...playerScores);
+    const winners = [];
+    playerScores.forEach((score,i)=>{if(score===maxScore) winners.push(`Jogador ${i+1}`);});
+    document.getElementById('winner-name').textContent = `Parabens: ${winners.join(', ')}!`;
+}
+
+let darkMode=true;
+function toggleDarkMode(){
+    if(darkMode){document.body.style.backgroundColor='#fff'; document.body.style.color='#000'; darkMode=false;}
+    else{document.body.style.backgroundColor='#1a1a1a'; document.body.style.color='#fff'; darkMode=true;}
+}
+
+function showCredits(){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('credits').classList.add('active');
+}
+</script>
+
+</body>
+</html>

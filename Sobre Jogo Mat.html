@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sobre o Jogo - Desafio do Saber Matemática!</title>
+    <style>
+        /* --- ESTILOS GERAIS E FUNDO FUTURISTA (CÓPIA DO CÓDIGO ORIGINAL) --- */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1a26; /* Fundo escuro */
+            color: #ffffff;
+        }
+
+        /* Estilos da Área Principal (main) com Fundo Futurista */
+        .main {
+            margin-left: 260px;
+            padding: 20px;
+            background-color: rgba(16, 30, 47, 0.95); /* Semi-transparente escuro */
+            min-height: 100vh;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden; 
+        }
+
+        .main::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Imagem de fundo lúdica/futurista */
+            background-image: url('https://picsum.photos/seed/math-about-futuristic/1200/800'); 
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15; /* Transparência um pouco maior para efeito visual */
+            z-index: 0;
+        }
+
+        .main > * {
+            position: relative; 
+            z-index: 1;
+        }
+
+        /* Estilos do Menu Lateral (sidenav) */
+        .sidenav {
+            height: 100%;
+            width: 240px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #00bcd4; /* Ciano futurista */
+            padding-top: 20px;
+            color: black;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .sidenav h3 {
+            padding: 0 20px 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+            color: black;
+        }
+
+        .sidenav a {
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #0d1a26; /* Texto escuro */
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .sidenav a:hover {
+            background-color: #0097a7;
+            color: white;
+        }
+        
+        /* --- ESTILOS ESPECÍFICOS DA PÁGINA SOBRE --- */
+        
+        h1 {
+            color: #ffeb3b; /* Amarelo neon para destaque */
+            border-bottom: 2px solid #00bcd4;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #00e676; /* Verde neon para subtítulos */
+            margin-top: 35px;
+        }
+        
+        /* Estilo para parágrafos */
+        .intro-text, .detail-text {
+            font-size: 1.15em;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+        
+        /* Destaque da frase inicial/gancho */
+        .intro-text {
+            background-color: rgba(43, 62, 80, 0.7); 
+            border-left: 5px solid #ff5722; /* Linha laranja */
+            padding: 15px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        /* Lista de Benefícios */
+        .benefits ul {
+            list-style-type: '⚡ '; /* Ícone de raio neon */
+            padding-left: 20px;
+            margin-top: 20px;
+        }
+
+        .benefits li {
+            font-size: 1.05em;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-bottom: 5px;
+        }
+        
+        .creator-info {
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid #00bcd4;
+            text-align: center;
+            font-style: italic;
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div class="sidenav" id="sidenav">
+        <h3>Desafio do Saber Matemática! 🧠</h3>
+        <a href="matematica.html">Início (Jogo)</a>
+        <a href="Regras e Pontuação.html">Regras e Pontuação</a>
+        <a href="Tabela de fases Mat.html">Tabela de Fases</a>
+        <a href="#" style="background-color: #0097a7; color: white;">Sobre o Jogo</a>
+    </div>
+
+    <div class="main">
+        <h1>🌌 Desafio do Saber Matemática!: Onde os Números se Cruzam</h1>
+        
+        <p class="intro-text">
+            "Prepare-se para transcender os limites do raciocínio lógico! O "Desafio do Saber Matemática!" é mais que um jogo: é uma arena digital onde suas habilidades de cálculo são postas à prova em um desafiador formato de palavras cruzadas numéricas.
+        </p>
+
+        <p class="detail-text">
+            Nascido da fusão entre o clássico passatempo de cruzadinhas e a complexidade do universo matemático, este jogo foi desenhado para educar, entreter e aprimorar a agilidade mental. Esqueça a memorização; aqui, a única forma de progredir é através da <span style="color: #ffeb3b; font-weight: bold;">aplicação precisa de fórmulas e operações.</span>
+        </p>
+        
+        <h2>🚀 Como Funciona a Missão?</h2>
+        <p class="detail-text">
+            Em cada uma das 20 fases, você recebe uma série de expressões matemáticas, que variam de operações básicas (soma, subtração) a conceitos avançados (álgebra, porcentagem, geometria). A chave é resolver cada expressão e, em seguida, usar o painel de dígitos para preencher o tabuleiro, encaixando os resultados vertical e horizontalmente. É um teste duplo: **cálculo impecável e lógica de encaixe apurada.**
+        </p>
+
+        <div class="benefits">
+            <h2>🧠 Benefícios da Simulação</h2>
+            <ul>
+                <li>Otimização do <span style="color: #00e676;">Raciocínio Lógico</span> e da capacidade de solução de problemas.</li>
+                <li>Revisão abrangente de 20 tópicos matemáticos, do fundamental ao intermediário.</li>
+                <li>Desenvolvimento da <span style="color: #ff5722;">Atenção Concentrada</span> ao lidar com o sistema Drag & Drop preciso.</li>
+                <li>Progressão gradual de dificuldade, ideal para estudantes e entusiastas de todas as idades.</li>
+            </ul>
+        </div>
+        
+        <p class="detail-text">
+            Você está pronto para decifrar os enigmas numéricos e provar que é o verdadeiro Mestre do Saber Matemático? O desafio está lançado. Que seus cálculos sejam rápidos e seus encaixes, perfeitos!
+        </p>
+
+        <div class="creator-info">
+            <p>Um projeto dedicado à união entre Educação e Tecnologia. Versão 1.0 (2025).</p>
+        </div>
+
+    </div>
+</body>
+</html>

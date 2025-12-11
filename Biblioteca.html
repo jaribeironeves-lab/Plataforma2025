@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.S. LIVROS - Biblioteca por Disciplina</title>
+    
+    <style>
+        /* 🎨 Definição de Variáveis de Cor */
+        :root {
+            --cor-fundo-claro: #f4f4f4;
+            --cor-cabecalho-texto: #ffffff; /* texto branco para contraste */
+            --cor-barra-nav: #4f7966; 
+            --cor-link-nav: #ffffff;
+            --cor-fundo-disciplinas: #d3d3d3; 
+            --cor-borda-botao: #70a0b0; 
+            --cor-fundo-botao: #e9ecef;
+            --cor-texto-botao: #333;
+            /* Novas Variáveis para as divisões de livros */
+            --cor-fundo-divisao: #ffffff;
+            --cor-borda-divisao: #ccc;
+            --cor-titulo-divisao: #4f7966;
+            --cor-fundo-card: #f9f9f9;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--cor-fundo-claro);
+        }
+
+        /* 🏷️ Cabeçalho com imagem */
+        .cabecalho-principal {
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794'); /* exemplo: livros */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* camada escura para contraste */
+        .cabecalho-principal::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 0;
+        }
+
+        .titulo {
+            position: relative; /* para ficar acima da camada escura */
+            font-family: 'Times New Roman', serif; 
+            font-size: 4em;
+            color: var(--cor-cabecalho-texto);
+            margin-bottom: 5px;
+            letter-spacing: 5px;
+            z-index: 1;
+        }
+
+        /* 📌 Barra de Navegação */
+        .nav-principal {
+            background-color: var(--cor-barra-nav);
+            display: flex;
+            justify-content: center;
+            padding: 15px 0;
+            position: sticky; /* Fixa a barra de navegação */
+            top: 0;
+            z-index: 10;
+        }
+
+        .nav-principal a {
+            color: var(--cor-link-nav);
+            text-decoration: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border: 1px solid var(--cor-link-nav);
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-principal {
+                flex-wrap: wrap;
+            }
+            .nav-principal a {
+                margin: 5px 5px;
+            }
+        }
+        
+        .nav-principal a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 📚 Seção de Disciplinas (Links no topo) */
+        .secao-disciplinas {
+            background-color: var(--cor-fundo-disciplinas);
+            padding: 20px 10%;
+            text-align: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        .link-disciplina {
+            display: block;
+            background-color: var(--cor-fundo-botao);
+            color: var(--cor-texto-botao);
+            border: 1px solid var(--cor-borda-botao);
+            padding: 10px 5px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.1s;
+            font-size: 0.9em;
+        }
+
+        .link-disciplina:hover {
+            background-color: #d8d8d8;
+            transform: translateY(-2px);
+        }
+        
+        /* 📖 Seções de Livros por Disciplina */
+        .secoes-livros {
+            padding: 40px 10%;
+        }
+
+        .divisao-disciplina {
+            background-color: var(--cor-fundo-divisao);
+            border: 1px solid var(--cor-borda-divisao);
+            border-radius: 8px;
+            margin-bottom: 40px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .divisao-disciplina h2 {
+            color: var(--cor-titulo-divisao);
+            border-bottom: 2px solid var(--cor-titulo-divisao);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.8em;
+            text-align: left;
+        }
+        
+        .container-livros {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+        }
+        
+        .livro-card {
+            width: 280px; /* Largura fixa para os cards */
+            background-color: var(--cor-fundo-card);
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .livro-card h3 {
+            color: #2c3e50;
+            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        .livro-card p {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .livro-card a {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: var(--cor-barra-nav);
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .livro-card a:hover {
+            background-color: #3e6051;
+        }
+
+        /* 💬 Mensagem de Feedback */
+        #feedback-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #38761d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.5s, visibility 0.5s;
+            visibility: hidden;
+            z-index: 100;
+        }
+
+        #feedback-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="cabecalho-principal">
+        <h1 class="titulo">D.S. LIVROS</h1>
+    </header>
+
+    <nav class="nav-principal">
+        
+        <a href="#Como Funciona">Como Funciona</a>
+        <a href="#Nossa Política">Nossa Política</a>
+        <a href="#Apresentação">Quem Somos</a>
+        
+    </nav>
+
+     <main>
+        <section class="secao-disciplinas" aria-label="Lista de Disciplinas">
+            <a href="Index.html" class="link-disciplina" data-disciplina="Português">Inicio do Site</a>
+            <a href="Biblioteca segunda p.html" class="link-disciplina" data-disciplina="Português">Livros</a>
+                        
+        </section>
+    </main>
+
+    <main class="secoes-livros">
+        <section id="portugues" class="divisao-disciplina">
+            <h2>Como Funciona</h2>
+            O acesso pode ocorre Pelo Celular, Tablet ou Computador.
+            Livros Digitais (e-books, PDFs, audiolivros).
+            Disponível 24 horas por dia, sem fila e sem prazo de devolução.
+            <h3><p>POR QUE USAR?</p></h3>
+            <p>Leitura leve: não precisa carregar livros pesados.
+            Recursos interativos : Dicionário, Marca-Texto, Leitura em voz alta.
+            Catálogo enorme: Matemática, Português, Biologia, física etc...</p>
+            <h3><p>COMO AJUDA OS ALUNOS?</p></h3>
+            <p>Facilita o hábito da leitura no dia a dia.
+            Dá liberdade para ler onde quiser.
+            Torna a leitura mais divertida e personalizada.</p>
+            <h3><p>D.S LIVROS</p></h3>
+            <p>LeirutaDigital BibliotecaVirtuaL</p>
+            <p>AmantesDeLivros Leitura é Vida</p>
+            <p>"SIGA A GENTE NO INSTAGRAM!"</p>
+            </div>
+        </section>
+
+        <section id="fisica" class="divisao-disciplina">
+            <h2>Nossa Política</h2>
+            Política Pública de Acesso Aberto e Inclusão Digital da Biblioteca Virtual Nacional
+            <h3></h3><p>1. Justificativa e Propósito Esta política tem como objetivo estabelecer as 
+                diretrizes e mecanismos para garantir o acesso universal, livre e 
+                gratuito ao conhecimento e à informação por meio da Biblioteca 
+                Virtual Nacional (BVN), promovendo a inclusão digital e 
+                educacional em todo o território nacional.</h3></p>
+            <h3><p>2. Eixos Fundamentais da Política</p></h3>
+            A política será estruturada em quatro pilares principais, garantindo 
+            que a BVN cumpra sua função social e educacional:
+            <h3><p>A. Acesso Aberto (Open Access) e Domínio Público
+            Diretriz: Priorizar a aquisição e o desenvolvimento 
+            de acervo de acesso livre e gratuito (Open Access) e 
+            obras em Domínio Público.</p></h3>
+            Ação: Todos os documentos produzidos com financiamento público (teses, pesquisas, relatórios) devem ser obrigatoriamente depositados no repositório da BVN e disponibilizados em Acesso Aberto, após período de embargo razoável, se aplicável.
+            <h3><p>B. Inclusão e Acessibilidade Digital</p></h3>
+            Diretriz: Garantir que a plataforma e o acervo sejam 
+            acessíveis a todas as pessoas, independentemente de 
+            limitações físicas, sensoriais ou tecnológicas.
+            <p>Ação: A plataforma da BVN deve seguir rigorosamente 
+                as normas de Acessibilidade Digital (WCAG 2.1), 
+                oferecendo recursos como leitores de tela, formatos 
+                adaptados (EPUB, DAISY) e design responsivo para 
+                uso em dispositivos móveis.</p>
+                Ação: Implementar programas de capacitação e pontos 
+                de acesso público (telecentros, escolas, bibliotecas 
+                físicas) para promover o uso da BVN por comunidades 
+                com baixa conectividade ou letramento digital.
+                <h3><p>C. Preservação Digital e Curadoria</p></h3>
+                Diretriz: Assegurar a integridade, a autenticidade 
+                e a disponibilidade do acervo digital a longo prazo.
+                <p>Ação: Adotar padrões internacionais de metadados 
+                (MARC, Dublin Core) e utilizar sistemas de repositório 
+                digital (DSpace, Fedora) com políticas claras de 
+                preservação digital.</p>
+                Ação: Estabelecer um comitê técnico-científico para 
+                realizar a curadoria do acervo, garantindo sua 
+                relevância, qualidade e atualização constante.
+                <h3><p>D. Fomento à Colaboração e Rede</p></h3>
+                Diretriz: Promover a integração e o compartilhamento 
+                de acervos com outras instituições de ensino, 
+                pesquisa e cultura (universidades, arquivos 
+                públ   icos, museus).
+                <p>Ação: Criar um Sistema Nacional de Bibliotecas
+                Virtuais que utilize a BVN como um agregador
+                central, padronizando os protocolos de intercâmbio 
+                de dados para que os usuários possam pesquisar em 
+                múltiplas bases simultaneamente.,</p>
+            </div>
+        </section>
+
+        <section id="quimica" class="divisao-disciplina">
+            <h2>Quem Somos</h2>
+            <div class="container-livros">
+                <div class="commitment-box">
+            <strong>Professor Orientador:</strong> 
+            <p>José Antonio Ribeiro das Neves</p>
+        </div>
+        
+        <div class="commitment-box">
+            <P><strong>Decodificadores em Treinamento</strong></P>
+            <p><strong>2ª Ano Sistema:</strong></p>
+            <ul class="team-list">
+                <li>Elizangela de Sousa Feitosa de Oliveira</li>
+                <li>Natalya Larisse Moraes do Nascimento</li>
+                <li>Vitória Ingred Gomes de Araújo</li>
+            </ul>
+            <div class="commitment-box">
+            <p><strong>2ª Ano Jogos:</strong></p>
+            <ul class="team-list">
+                <li>Alexandre Roxael Alves de Oliveira</li>
+                <li>Fabio Nayron Silva Brito de Oliveira</li>
+                <li>Jefferson Gabriel dos Santos da Silva</li>
+            </ul>
+        </div>
+        </div>
+        
+                
+            </div>
+        </section>
+        
+        
+        
+    </main>
+
+    <div id="feedback-message" aria-live="polite"></div>
+
+    <script>
+        // Adicionando o event listener para o menu rápido
+        document.querySelector('.secao-disciplinas').addEventListener('click', e => {
+            if (e.target.classList.contains('link-disciplina')) {
+                const disciplina = e.target.dataset.disciplina;
+                showFeedback(`Redirecionando para a seção de ${disciplina}...`);
+            }
+        });
+        
+        // Adicionando um listener para os links de acesso em breve
+        document.querySelectorAll('.link-indisponivel').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault(); // Evita a navegação
+                showFeedback("Acesso aos materiais em desenvolvimento!");
+            });
+        });
+
+        function showFeedback(message) {
+            const feedbackMessage = document.getElementById('feedback-message');
+            feedbackMessage.textContent = message;
+            feedbackMessage.classList.add('show');
+            setTimeout(() => feedbackMessage.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

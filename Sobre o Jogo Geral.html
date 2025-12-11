@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre o Jogo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variáveis para cores */
+        :root {
+            --bg-body: #e0f7fa;
+            --bg-main: #ffffff;
+            --color-primary: #00bcd4; /* Azul Turquesa */
+            --color-accent: #ff9800; /* Laranja */
+            --color-success: #4caf50; /* Verde */
+        }
+
+        /* --- Estilos Gerais --- */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-body);
+            color: #333;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* --- SIDEBAR (Navegação Lateral) --- */
+        .sidenav {
+            height: 100%;
+            width: 220px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: var(--color-primary); /* Fundo com a cor principal */
+            overflow-x: hidden;
+            padding-top: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidenav a {
+            padding: 15px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: background-color 0.3s, color 0.3s;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sidenav a:hover {
+            background-color: #00838f; /* Tom mais escuro do primário */
+            color: #fff3e0;
+        }
+
+        .sidenav h3 {
+            color: white;
+            text-align: center;
+            margin: 0 0 30px 0;
+            font-size: 1.6em;
+            padding-bottom: 10px;
+            border-bottom: 2px solid white;
+            margin: 0 20px 20px 20px;
+        }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        .main-content {
+            margin-left: 220px; /* Garante que o conteúdo não fique sob a sidebar */
+            padding: 40px;
+            max-width: 900px;
+            background-color: var(--bg-main);
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            min-height: 100vh;
+        }
+
+        /* Título */
+        h1 {
+            color: var(--color-primary);
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 3px solid var(--color-primary);
+            padding-bottom: 10px;
+            display: block;
+            text-align: center;
+        }
+        
+        /* Subtítulos para organizar melhor o conteúdo */
+        h2 {
+            color: var(--color-accent);
+            border-left: 5px solid var(--color-accent);
+            padding-left: 10px;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        /* Parágrafos */
+        p {
+            margin-bottom: 25px;
+            font-size: 1.1em;
+            text-align: justify;
+            color: #555;
+        }
+
+        /* Destaque <strong> */
+        strong {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        /* Destaque <em> (Itálico) */
+        em {
+            font-style: italic;
+            color: var(--color-success);
+            font-weight: 600;
+        }
+        
+        /* Lista de Membros */
+        .team-list {
+            list-style: none;
+            padding-left: 0;
+            text-align: left;
+        }
+
+        .team-list li {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            border-left: 3px solid var(--color-success);
+        }
+
+        /* Caixa de Compromisso/Informação */
+        .commitment-box {
+            background-color: #f1f8e9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--color-success);
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .commitment-box strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.15em;
+            color: #388e3c;
+        }
+
+        .commitment-box p {
+            margin: 0;
+            color: #388e3c;
+            font-weight: 400;
+            font-size: 1em; /* Ajusta o tamanho da fonte dentro da caixa */
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidenav">
+        <h3>Menu</h3>
+        <a href="index.html">Voltar ao Início</a>
+    </div>
+
+    <div class="main-content">
+        <h1>Sobre o jogo - Desafios Cognitivos em Matriz</h1>
+        
+        <p>Este projeto visa estimular diferentes áreas cognitivas através de um formato de puzzle interativo de arrastar e soltar baseado em matriz. Desenvolvemos uma plataforma flexível que utiliza o mesmo framework de tabuleiro para criar dois tipos principais de desafios.</p>
+
+        <h2>Sobre o Projeto: Desafios Cognitivos em Matriz</h2>
+
+        <div class="commitment-box">
+            <p><strong>Este projeto visa estimular diferentes áreas 
+                cognitivas através de um formato de quebra-cabeça 
+                interativo de arrastar e soltar baseado em matriz. 
+                Desenvolvemos uma plataforma flexível que utiliza o 
+                mesmo framework de tabuleiro para criar dois tipos 
+                principais de desafios:</strong> 1 . Palavras Cruzadas: 
+                Um desafio focado no vocabulário, linguagem e associação 
+                de ideias. Nesta modalidade, o jogador é transportado para 
+                um ambiente com estética futurista, onde deve decifrar pistas 
+                conceituais e arrastar as letras corretas para preencher as 
+                palavras no tabuleiro. O sucesso depende da capacidade de 
+                recuperação de informações verbais e do conhecimento da língua.
+            
+        </div>
+
+        <p></p>
+        
+        <h2></h2>
+
+        <div class="commitment-box">
+            <strong><P>2 . Desafio do Saber Matemática!: Uma modalidade que se 
+                concentra no raciocínio lógico-matemático e na habilidade 
+                numérica. O jogador deve resolver operações matemáticas 
+                (como adição, multiplicação e potências) de dificuldade 
+                crescente e arrastar os dígitos/caracteres correspondentes 
+                ao resultado para preencher as células da matriz. 
+                Este jogo estimula o cálculo mental e a aplicação das 
+                regras de precedência de operações.</p></strong> 
+            <p></p>
+        </div>
+
+        <div class="commitment-box">
+            <strong>Ambos os jogos são estruturados 
+                em múltiplas fases progressivas, 
+                utilizando um design envolvente 
+                com cores neon e temas futuristas 
+                para manter o jogador engajado 
+                enquanto exercita suas habilidades 
+                de forma lúdica.</strong>
+            <ul class="team-list">
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+        
+        <h2></h2>
+        <p></p>
+
+    </div>
+
+    <script>
+        // JavaScript simples para interação/confirmação de carregamento
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página Quem Somos carregada com estrutura de Sidebar.');
+        });
+    </script>
+
+</body>
+</html>

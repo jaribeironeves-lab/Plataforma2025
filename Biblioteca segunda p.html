@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.S. LIVROS - Biblioteca por Disciplina</title>
+    
+    <style>
+        /* 🎨 Definição de Variáveis de Cor */
+        :root {
+            --cor-fundo-claro: #f4f4f4;
+            --cor-cabecalho-texto: #ffffff; /* texto branco para contraste */
+            --cor-barra-nav: #4f7966; 
+            --cor-link-nav: #ffffff;
+            --cor-fundo-disciplinas: #d3d3d3; 
+            --cor-borda-botao: #70a0b0; 
+            --cor-fundo-botao: #e9ecef;
+            --cor-texto-botao: #333;
+            /* Novas Variáveis para as divisões de livros */
+            --cor-fundo-divisao: #ffffff;
+            --cor-borda-divisao: #ccc;
+            --cor-titulo-divisao: #4f7966;
+            --cor-fundo-card: #f9f9f9;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--cor-fundo-claro);
+        }
+
+        /* 🏷️ Cabeçalho com imagem */
+        .cabecalho-principal {
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-image: url('https://images.unsplash.com/photo-1512820790803-83ca734da794'); /* exemplo: livros */
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* camada escura para contraste */
+        .cabecalho-principal::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 0;
+        }
+
+        .titulo {
+            position: relative; /* para ficar acima da camada escura */
+            font-family: 'Times New Roman', serif; 
+            font-size: 4em;
+            color: var(--cor-cabecalho-texto);
+            margin-bottom: 5px;
+            letter-spacing: 5px;
+            z-index: 1;
+        }
+
+        /* 📌 Barra de Navegação */
+        .nav-principal {
+            background-color: var(--cor-barra-nav);
+            display: flex;
+            justify-content: center;
+            padding: 15px 0;
+            position: sticky; /* Fixa a barra de navegação */
+            top: 0;
+            z-index: 10;
+        }
+
+        .nav-principal a {
+            color: var(--cor-link-nav);
+            text-decoration: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border: 1px solid var(--cor-link-nav);
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-principal {
+                flex-wrap: wrap;
+            }
+            .nav-principal a {
+                margin: 5px 5px;
+            }
+        }
+        
+        .nav-principal a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 📚 Seção de Disciplinas (Links no topo) */
+        .secao-disciplinas {
+            background-color: var(--cor-fundo-disciplinas);
+            padding: 20px 10%;
+            text-align: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        .link-disciplina {
+            display: block;
+            background-color: var(--cor-fundo-botao);
+            color: var(--cor-texto-botao);
+            border: 1px solid var(--cor-borda-botao);
+            padding: 10px 5px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.1s;
+            font-size: 0.9em;
+        }
+
+        .link-disciplina:hover {
+            background-color: #d8d8d8;
+            transform: translateY(-2px);
+        }
+        
+        /* 📖 Seções de Livros por Disciplina */
+        .secoes-livros {
+            padding: 40px 10%;
+        }
+
+        .divisao-disciplina {
+            background-color: var(--cor-fundo-divisao);
+            border: 1px solid var(--cor-borda-divisao);
+            border-radius: 8px;
+            margin-bottom: 40px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .divisao-disciplina h2 {
+            color: var(--cor-titulo-divisao);
+            border-bottom: 2px solid var(--cor-titulo-divisao);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.8em;
+            text-align: left;
+        }
+        
+        .container-livros {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+        }
+        
+        .livro-card {
+            width: 280px; /* Largura fixa para os cards */
+            background-color: var(--cor-fundo-card);
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .livro-card h3 {
+            color: #2c3e50;
+            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        .livro-card p {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .livro-card a {
+            display: inline-block;
+            margin-top: 10px;
+            background-color: var(--cor-barra-nav);
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .livro-card a:hover {
+            background-color: #3e6051;
+        }
+
+        /* 💬 Mensagem de Feedback */
+        #feedback-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #38761d;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transition: opacity 0.5s, visibility 0.5s;
+            visibility: hidden;
+            z-index: 100;
+        }
+
+        #feedback-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="cabecalho-principal">
+        <h1 class="titulo">D.S. LIVROS</h1>
+    </header>
+
+    <nav class="nav-principal">
+        <a href="Biblioteca segunda p.html">Inicio da Pagina</a>
+        <a href="#portugues">Português</a>
+        <a href="#fisica">Física</a>
+        <a href="#quimica">Química</a>
+        <a href="#geografia">Geografia</a>
+        <a href="#matematica">Matemática</a>
+        <a href="#biologia">Biologia</a>
+        <a href="#redacao">Redação</a>
+        <a href="#sociologia">Sociologia</a>
+        <a href="#historia">História</a>
+        <a href="#espanhol">Espanhol</a>
+        <a href="#ingles">Inglês</a>
+        <a href="#artes">Artes</a>
+    </nav>
+
+     <main>
+        <section class="secao-disciplinas" aria-label="Lista de Disciplinas">
+            <a href="index.html" class="link-disciplina" data-disciplina="Português">Inicio do Site</a>
+            <a href="Biblioteca.html" class="link-disciplina" data-disciplina="Física">Inicio da Biblioteca</a>
+            <a href="Biblioteca segunda p.html" class="link-disciplina" data-disciplina="Química">Inicio da Pagina</a>
+            
+        </section>
+    </main>
+
+    <main class="secoes-livros">
+        <section id="portugues" class="divisao-disciplina">
+            <h2>Português</h2>
+              <div class="container-livros">
+                <div class="livro-card">
+                    
+                    <h3>01 Gramática Comentada</h3>
+                    <p>Se Liga nas Linguagens "português"</p>
+                    <p>Foco: Regras, Morfologia e Sintaxe.</p>
+                    <img src="data:image/jpeg;base64,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" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="https://pnld.moderna.com.br/wp-content/uploads/2021/05/Se-liga-nas-linguagens_Port.pdf" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 Literatura Brasileira</h3>
+                    <p>Autor: Coleção Clássicos</p>
+                    <p>Foco: Análise de movimentos literários (Romantismo, Modernismo, etc.).</p>
+                    <img src="https://imgv2-2-f.scribdassets.com/img/document/804677606/149x198/e5a42d7bdb/1734186724?v=1" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="https://pt.scribd.com/document/804677606/LINGUA-PORTUGUESA-CE-VOL-1" target="_blank">
+                    Ver Livro (Exemplo)
+                    </a>
+
+                </div>
+                <div class="livro-card">
+                    <h3>03 Interpretação de Textos</h3>
+                    <p>Autor: Maria da Silva</p>
+                    <p>Foco: Gêneros textuais e técnicas de compreensão.</p>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdJcc5F8f6Dx6I_19qmEnOSlI9z7pBYANHrQ&s" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://s3.amazonaws.com/pnld.ftd.com.br/wp-content/uploads/2021/08/06161043/0216P21013-MULT-LING-PORT-MT-EM-VU-MANUAL-001-416-PNLD22.pdf" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                
+            </div>
+        </section>
+
+        <section id="fisica" class="divisao-disciplina">
+            <h2>Física</h2>
+            <div class="container-livros">
+                <div class="livro-card">
+                    <h3>01 Mecânica Clássica I</h3>
+                    <p>Autor: Newton e Cia.</p>
+                    <p>Foco: Cinemática, Dinâmica e Leis de Newton.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkfVQT7BOmu6Qi4X-OCo68l5AKZtRNFfukhzxdQOb7DNn_CoFToBzPVQP1_SkecRXGpHKyZVYBVTnjtKXLXwLQkGJye-rhYWhH3w-TFjX9hPMPMMLTz-nPy6CNC-JBEbkfYOTFcIrBLbUqEIWTWPtFGEiX__RJciXId-KGYL2m4YJdGfzRQ376-CYwe1WL5dwHsPw-QR3V9LCtOAH9VWieCDOt35mx-x5w=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 Eletricidade e Magnetismo</h3>
+                    <p>Autor: Faraday Jovem</p>
+                    <p>Foco: Circuitos, Eletrostática e Campos Magnéticos.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkcOKMbTZrcWqPitPyXZYafWfg_TS_9ctEyRAmqR5WAO4A-HCTAV7pkU8jiWNAyEAgKMcJqich1xE0Fn4BS_ArpsZLOBLt9EanGOgaAI_JK4oSyT8jp6FQCicdAta7U1EEbWE978hEbtCj8ohoUQBenwSDv33USYSX1HRDwwmo_Lzv7Ko1eSUDjl941MJDOcz02Tq98g0SnvgLLgmt0_GRdCbXblr_kWdbbdjao=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>03 Termodinâmica Essencial</h3>
+                    <p>Autor: Carnot & Kelvin</p>
+                    <p>Foco: Calor, Trabalho e Transformações Gasosas.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkcQOsWGCbsC-B8JKvLqXMrqbKNI1OEHoxA-OltXsmub_VF4PgdYaM6k7xXQv7yPEUhkVFX5PMe1GnP1glxrrm6sVrJ2MYUtqKelK5tM-NT1tVa82mD5K2dOda65ndIqmsbHHlWFjW5U6zUMRqpSFSj-W_C5TimKrkS8rsw9aC7QFkBuJJJPo_wNBpcn6EjXylna8n0_84aa099tc2QJAeF49_2ojBKSiQE0r3M=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                
+            </div>
+        </section>
+
+        <section id="quimica" class="divisao-disciplina">
+            <h2>Química</h2>
+            <div class="container-livros">
+                <div class="livro-card">
+                    <h3>01 Química Geral e Inorgânica</h3>
+                    <p>Autor: Lavoisier Contemporâneo</p>
+                    <p>Foco: Estequiometria, Tabela Periódica e Ligações.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkdLa9zhnHEB2mwgk-A6QT9BU9y60pjtgKB1jB2g8yh38Fj_OeOTLV2af9xIu6M7F4Map3-BUa20o5iYCqiBEobxWxEwtBW3jy9_5liNTQicjutHBey7wfpG9DWeAi5WOc4tfMdExKhfi7G4cvvHMMiG4KfMW7zrC1qrQHDpKBs9gqVlDEgK7lNuo5q28CDfNSPAKqyL0J3J0IM5Fbh7Fa9Ojz4GP1F1sYPq=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 Físico-Química Prática</h3>
+                    <p>Autor: Madame Curie</p>
+                    <p>Foco: Termoquímica, Cinética e Equilíbrio Químico.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkcva1BbP-BgR5eoRecLoLwfyPjRj0HxG8oD95SxNuh3_TEhV6o-G8r_r-ZMNArCOS-OhpYtDCjCrFRJrv0a54LAZXqBUKX_Ad1swY9DzjYAuOMLbcpGf64w7WdPM4ZllDKIhsfv4vhEaBZ5N097BHbEyyj8hoA9BtrhDTUfrA2Sp22sNWNkbLOD4ESx9Bi-0VggBqwb7uCAOA-yYD_EePv0TJAPXX0yxARx=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="materiais/quimica.html" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>03 Química Orgânica Simplificada</h3>
+                    <p>Autor: Carbono Maníaco</p>
+                    <p>Foco: Nomenclatura, Funções e Isomeria.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkdKSTyClm_LuuzZXmXVdruZhLv9yoBYHN24hhZijIG5GGmppNFHYJGUd1sOkF7-mhsOB_51n9f-2PlxYInVKlw7y_RQJVCQQpRL-Lv_i5HPQd3kDg6WA12p791Zfk36iSNnQCNzWms5VtAAqQSvY3CFC_IOe5wkeYnd30hTIZZYfojpSIaWjPqsxfr8JIpwIK67p_9ivlBiTcWjFUhfiYWCDMlXmwOjSuf8g7A=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                
+            </div>
+        </section>
+        
+        <section id="geografia" class="divisao-disciplina">
+            <h2>Geografia</h2>
+            <div class="container-livros">
+                <div class="livro-card">
+                    <h3>01 Geografia Física do Brasil</h3>
+                    <p>Autor: Aziz Novato</p>
+                    <p>Foco: Clima, Relevo e Hidrografia.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkdXP2rzjDueWFxvhf-_pYilt2Pol6qtPX-dF0nGDBNtFOWXR9QKZibq43fs4KjO3eSrFOzdKF4Tv8W6cKVRDBt6nl1rHdK6v-vXdFsLcrhKnEj96RCYKWkWTBUww8jBR3pgnMeam3YKkVtlB0y-qC1SkAdB4bm8FLBR7Vw6BiRqZXQSMaueTRlID0qLiiUrMGZBv-V4FQd3APCgDAD0Y7OWi1rIJe1MVcBOvAE=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="materiais/geografia.html" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 Geopolítica Mundial</h3>
+                    <p>Autor: Kissinger de Botas</p>
+                    <p>Foco: Conflitos, Blocos Econômicos e Relações Internacionais.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkei960ldX7i-d6LBzlTkGj-M3Lv3yu_JZg_XSoCaCEJx7WE8GoEPQxaaBhsNVyV_dSDM7iK4w90lDvgpOAC3_40OC4mrvxQt3OrSObbU3ZAwA2IvIpK7JVm8zVCAQAyHOH7UFCAoT2vbTxT06vAh7v5NMghlxyer0vJm8xMKMvJ3_NlrjrevEXvwLJZNpGas-8tfPghFljv7WPdM764FEO7sIT7GzNQXudcm0Y=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>03 Geografia Urbana e Industrial</h3>
+                    <p>Autor: Milton das Cidades</p>
+                    <p>Foco: Urbanização, Indústria e Transportes.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkcllHumkK0drTlxgsTAAyycL2_DphjhFY2fTL9AvqVoqcIlLsXldmW3foF51Phf5OuT-Opup0nBFrzdPoGaRvKwb5LG1Vh1KbdobFVGZXCciltSSogjBpd7bgC0OyNaWXJU7TT2XnJMf15jajor4M4yEA6lA_GjNv5EmuQ1trbYsse8yCj6G08JpzsOSvbwIpV3OlF0IPZeDhals7wnFresjzqBSzpYaw=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+               
+            </div>
+        </section>
+
+        <section id="matematica" class="divisao-disciplina">
+            <h2>Matemática</h2>
+            <div class="container-livros">
+                <div class="livro-card">
+                    <h3>01 Álgebra Linear</h3>
+                    <p>Autor: Euclides Moderno</p>
+                    <p>Foco: Funções, Equações e Matrizes.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkd4sgpq3jkrnW2RbcTBP5dcNCJHlO9NabQWx3-L5wytrDeSb4ow58PBlDkoFse_ZbBATdIcgT5VBdOXhreK1uUKbDS0y9qeHBqgOI_6wIZasKiQ-ZywBUvQ_-UVS7lgRConBVGtK29LLLlelA5BaGnyUg9QGRuJwpunPew8aHRzHlUnGyH01sHodbAxuIX_b0R6GSjmMJRIReXwbqpGBTQetAJBToYeI9i5H0s=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="https://bibliotecaagptea.org.br/ensino_medio/MATEMATICA%20E%20SUAS%20LINGUAGENS/1_ANO/Matematica%20Paiva%201_%20ano.pdf" target="_blank">Ver Livro (Exemplo)</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 Geometria Analítica</h3>
+                    <p>Autor: Descartes Jovem</p>
+                    <p>Foco: Plana, Espacial e de Posição.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkdQsxIZ8XlExguT2MxVCyzDEmai9LW33KsdGTF5VnFJTe44ihWEhILPhLobGQOo2I9QVOl4VMKc8V7ytjDkoZwma6k8wSC2_TGP51vEfnhQ2sKxaLWedLXsmsyZPKY8aFGJckL6UlvH-jgwYKv4EaRvg-8VvNjPF0CjiXkZlyM9cHB_0eTSUw9arN39b-PJXcP2g4b_W8rNQOho6y3uFg1i8BpAqxNzg6t2=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>03 Cálculo I (Introdução)</h3>
+                    <p>Autor: Leibniz Diferenciado</p>
+                    <p>Foco: Limites, Derivadas e Integrais básicas.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkekN0WI3BRdgZ8O6XSX4-YK4M9j-fdNPgc12qBcVizdPZoeV-er8Rc3pFK_5g1ePur0F0bFPlM_I_Bgs09idJ7Ju3aX6-F58kyBjvRY8U4R7J_cX8J5N0O_3qDjSfDgqKZwXM2u4ljpkUvzkEqq1k-63rRGpZf26tot_To_y79dB1-_zKNG-WERngBvDGhNXqBnaQBne8lXyvo-J0lC8afy2Mkbe-WLOto6KvY=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                
+            </div>
+        </section>
+
+        <section id="biologia" class="divisao-disciplina">
+            <h2>Biologia</h2>
+            <div class="container-livros">
+                <div class="livro-card">
+                    <h3>01 Citologia e Histologia</h3>
+                    <p>Autor: Robert Hooke</p>
+                    <p>Foco: Células (Pro e Eucariontes) e Tecidos.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkeIaTWuxklwCqm0U45dXMn7OLk88zJHgAlDbrT9hg4A07F30DN-xVNn1CMPrCBpmNCtgcYq7lX7zpM2D1PQEfNiEJnochcDFPKI_k4cZGoktEueYDino3zyajYzDMoQzVDtflNWzmP8pmFOvuPuXYE7WAldYqdvfPgGFl2v9k8gQAR5JPfnv6M32y6u0droj9HtVl1rwVwfgCAm_sahXRExPQzB5lWcNcBPnNI=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="materiais/biologia.html" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 Genética Molecular</h3>
+                    <p>Autor: Mendel Rastreador</p>
+                    <p>Foco: DNA, RNA, Código Genético e Herança.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkfEWerQXd2OLyV90PEQ1xhKOfmmxzbT7dd-dsYxzthsVZ9mZWqDK7DTEaQLJ9cllu4dREASt6-UxxZedAd8EWIfNknQ_gXpORVXMiJ0RTyC94qc0Nuz4LCD5RrZGODGY7rxTb1XrRGWGkNoYdDQfkvZO0X80eqBBrpCZCDGuHkEInGvrkZbCg7VaG-cwwC2DTCTpIo1NVISQZl5CpZRmQHDonf9TRUYIkg65C0=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>03 Fisiologia Humana</h3>
+                    <p>Autor: Galeno</p>
+                    <p>Foco: Sistemas (Digestório, Circulatório, etc.).</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkdyQFg0BHBv6geRk1ag-Ee6gjR67md3rghKtL4KfvGrQkXzh9s9r16qhmgus3slR_TfDolBDqEOLHTpmkeg298Cex8cVlkShGmmuLZpcaWx5XpugkRBV2G8xeXIygdoh-GFjOeUPZbwgyG0GBTa3GmnvGDfozqhxdFIsom-0piqL8DtsfThRc0Q-PF3-5gFGTq3IldoTzO1u5tEZWNxlid1WBK_g2n7Wg-m=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                
+            </div>
+        </section>
+        
+        <section id="redacao" class="divisao-disciplina">
+            <h2>Redação</h2>
+            <div class="container-livros">
+                <div class="livro-card">
+                    <h3>01 Redação Dissertativa-Argumentativa</h3>
+                    <p>Autor: Mestre da Tese</p>
+                    <p>Foco: Estrutura, Argumentação e Coesão.</p>
+                    <img src="https://www.edocente.com.br/wp-content/uploads/2025/04/Capa-Identidade-Saraiva-Redacao-2.webp" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="https://www.edocente.com.br/pnld/obra/leitor-pdf/identidade-saraiva-redacao-pnld-ensino-medio-2026/?obraId=13820" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 Guia de Competências</h3>
+                    <p>Autor: INEP Fácil</p>
+                    <p>Foco: Análise detalhada dos critérios de avaliação.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkeJg6XPOyUmeOQPu9nB3Z92a0v48zttSabdxviJUNLhl08yp13_PC1iZGOLUGfUDgnRy38FVHLIJlm0EOSWb1kCW5d3kk691AVY2-SxnoWi0594nUWd0p3Y2Mb8AwsRVf9wTJdPsW4ZUdeQny79QigtN3NhGZo1tmIX2ztePsHOcdiwcnteM4SFvxtyw_47Y2UsXsu9VYzNCkzDQgkL8yvvhtHQlrKMflPv=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>03 Guia de Competências</h3>
+                    <p>Autor: INEP Fácil</p>
+                    <p>Foco: Análise detalhada dos critérios de avaliação.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkfX_aMacdGTw2FNdHmVp3WDHrjnMwLvqt3WlVaRq8bTlq80kELWXReu-wtqGP5QFCDUr1CL1_EjOFwt9-Fxj1BDFQUaw-XojRxuDzkONQlkXpQgxasHYWCVhfMYdMxlbVFoP_N-MRSUmse0AYmimKFWbNcQ6IEwkLs1izyH9G-c2-3BPprdt4woIrAw8gbY7nsSenQ9Hj8MTlywtVTvjBJ6h8hy7Blu3CGlrZk=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                
+            </div>
+        </section>
+
+        <section id="sociologia" class="divisao-disciplina">
+            <h2>Sociologia</h2>
+            <div class="container-livros">
+                <div class="livro-card">
+                    <h3>01 Os Clássicos da Sociologia</h3>
+                    <p>Autor: Durkheim, Weber e Marx</p>
+                    <p>Foco: Teorias Fundamentais e Conceitos.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkc6QhVgvuSBOincpo4VJpS7iZcA8GNzUBnfnSyHTPe9FtVVbnRmMmYr63HIYGe8spfhQrOvM2F-h8mV2N8mQAbBPpIgBPP7fhnWo7hLsLloPIveHXzLEdNCG5gkzOiPnzs9xwe8NEEW11PtW4-g36RJgiae_PatmcJWxaBhFQ_OyY6gso1uXz7L4wcyIaNo6N3ZPHYRU5lU5Stt6sdVmP29rGrGlUm0-XLDwCM=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="materiais/sociologia.html" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 Cultura e Indústria Cultural</h3>
+                    <p>Autor: Adorno e Horkheimer</p>
+                    <p>Foco: Conceitos de Cultura, Massa e Mídia.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkck-4WZLXhvjyZqWYh1iK5mi6_oWefp2GCO6LhCVhYpcjEv7MqgpDYOSBM4jcaUu-AaxulehDADbHMuXePJiRzVsey2BHT6FZHb42Mm4ozFWn0lUAPduIQ8572YU9CnyLQ8qRjhoijbetJHVLASlksrxSTyDStK-HND0VEyWUzAuPhpXx3CH3EG3b3bw2Udq1BYDO6xKwLh86Hu48OtmEeWw6H8mFQpsCSnaH0=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>03 Cidadania e Direitos Humanos</h3>
+                    <p>Autor: Sociólogo Ativista</p>
+                    <p>Foco: Movimentos Sociais e Estrutura Política.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkdgekvn8fI6Uw7Fu7Qjr0i0zi-79iZKAgklRYeXH9N6Wxh-6-rB7mah6TotwXFSDUrWMiwcVCrXurFv_OvoQJqzLiWhakk9Cp5XFOKmoR4_5ILm7Tq5laRtd2Q5xrvIFscs5D8H-DUipZ80MQvhzjspxAAbYo0wyayI6zqMu0HFooCsnwMqSlx97FQYMvyqVfwpeEP5lc5ohg_CMd3jMH0WvVz15wexYu9VS2I=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                
+            </div>
+        </section>
+
+        <section id="historia" class="divisao-disciplina">
+            <h2>História</h2>
+            <div class="container-livros">
+                <div class="livro-card">
+                    <h3>01 História Geral: Antiga e Medieval</h3>
+                    <p>Autor: Heródoto Jovem</p>
+                    <p>Foco: Grécia, Roma, Feudalismo e Cruzadas.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkcL5E5PwrhBz0luJSR5Lw-lXdU7c44ItVN7Iw5Gi--V0k4VpVX7G4PlTt_hXeuz__BxrDW9MKBPCrfwp4TLhBpAqJL9XMtYzHztvfEo_kaU6hOMhOsqQKwipe31_5Pxhfj5xiuyQXyFbza9vnFUBqgouTjIfqd-KT8lK-O8vOjxsezl6kXFpvZ52Q9vHgohdKmHO38PDK5tfZatRoIzULgtAb2G_zqx-W9dtnY=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="materiais/historia.html" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 História do Brasil: Colônia e Império</h3>
+                    <p>Autor: Caio Prado</p>
+                    <p>Foco: Ciclos Econômicos, Escravidão e Independência.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkdKxQTXmNlUy4AxniECPz3D1h7KGO4fD2KH1tYucP0hT82IxaVWKzUmO5cZJXw_MvB-6YbvmyIBWjyoz7jyiA9Z6ucgUjfX6IbEW-4UJIwd5x6pNSBLdCIHsdSsP-nA3BxkbM0pgFrIt34_MBtEb8PxvqdGI0BvJFe1X11xDMgf3dKg-IFXlJKzPvgqxL5bA_dGtzn6kP_i4wWc03SpLKhTUNpJkgOFnH4lgG0=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>03 Idade Contemporânea</h3>
+                    <p>Autor: Eric Hobsbawm</p>
+                    <p>Foco: Guerras Mundiais, Revoluções e Guerra Fria.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkeLLsyaz4MPOy5YXkA2QpO80bE1LmxP6kXoL_qOnIfKv9nc9W_yOGj0EDVFe8KEp1ixEaZWf4M-cXQ-jvJL25oqo2oTXlttZeFTv0w5QmRY_Rb6jkR9UdFg2QOZnLAEtlHAsatyGpTS-P2lShdsDdnZSBBeGodAFplZAucsSVEumx0qV1HwuQgip922FiuKQ7EQxoNXOAzINHBhbXuQ_QTjRWHln8-C8_Tm=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                
+            </div>
+        </section>
+
+        <section id="espanhol" class="divisao-disciplina">
+            <h2>Espanhol</h2>
+            <div class="container-livros">
+                <div class="livro-card">
+                    <h3>01 Gramática Prática (Español)</h3>
+                    <p>Autor: Cervantes Júnior</p>
+                    <p>Foco: Verbos, Conjugação e Artigos.</p>
+                    <img src="caminho/da/imagem.jpg" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="materiais/espanhol.html" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 Vocabulário Essencial</h3>
+                    <p>Autor: Amigo Mexicano</p>
+                    <p>Foco: Palavras-chave e Falsos Cognatos.</p>
+                    <img src="caminho/da/imagem.jpg" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>03 Cultura Hispânica</h3>
+                    <p>Autor: Viajante das Américas</p>
+                    <p>Foco: Tradições, História e Países de Língua Espanhola.</p>
+                    <img src="caminho/da/imagem.jpg" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                
+            </div>
+        </section>
+
+        <section id="ingles" class="divisao-disciplina">
+            <h2>Inglês</h2>
+            <div class="container-livros">
+                <div class="livro-card">
+                    <h3>01 English Grammar Advanced</h3>
+                    <p>Autor: Shakespeare Moderno</p>
+                    <p>Foco: Tempos Verbais e Estruturas Complexas.</p>
+                    <img src="caminho/da/imagem.jpg" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="materiais/ingles.html" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 Vocabulary Builder</h3>
+                    <p>Autor: Cambridge Ajudante</p>
+                    <p>Foco: Phrasal Verbs e Idioms.</p>
+                    <img src="caminho/da/imagem.jpg" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>03 Reading Comprehension</h3>
+                    <p>Autor: Professor John</p>
+                    <p>Foco: Técnicas de Skimming e Scanning.</p>
+                    <img src="caminho/da/imagem.jpg" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                
+            </div>
+        </section>
+
+        <section id="artes" class="divisao-disciplina">
+            <h2>Artes</h2>
+            <div class="container-livros">
+                <div class="livro-card">
+                    <h3>01 História da Arte Clássica</h3>
+                    <p>Autor: Leonardo da Vinci</p>
+                    <p>Foco: Renascimento, Barroco e Neoclassicismo.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkenH9VNyio_92Fo2XPA0hkINhmuG6MW3lDjAo186YDSev_jBlvyxVenhn1hqhRasPejqqPJQy5dxxXLwCHmFSgUoaIIFtFN2g2aL2fx6xkNv7tb3RZz-epM73XqvPRR3Lk1yBUoZcjrt4Yl6GcFKoA4fcYF22iNDqyowHlPo-_I0qKhxNvFszXaq0fZS0qdOUkdgDwCyUrSy33zj4QmPGPvC8as-L9uxli_soM=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="materiais/artes.html" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>02 Arte Moderna e Contemporânea</h3>
+                    <p>Autor: Andy Warhol</p>
+                    <p>Foco: Impressionismo, Cubismo e Pop Art.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkep2AXabTKqAHhIjYase856CCON4HBFXKMtS9aCcGQVnrXnunX0eTi-rnGuNxtrx2g5FT_OzKHAbrcoQxFHCSfaIMZJO2K9Nt_PWMlRYsd_z1CnCiWIWWfvhKRcQTEsfe737EafnbInQcSf1J-WhCnvBVxH_N_rkWdLSfVEw81wh16wUh63JV_2nLSy1PastelY1mLN6RFAyb5rVdWlKMESWWZTktxooT99MA0=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                <div class="livro-card">
+                    <h3>03 Música e Teatro</h3>
+                    <p>Autor: O Produtor</p>
+                    <p>Foco: Gêneros Musicais e Dramaturgia.</p>
+                    <img src="https://lh3.googleusercontent.com/sitesv/AAzXCkemWVU5tWxMQCT3F-UbBw9WY9UJZqs4W_KlQ_gACJmdNZYTi_v9eCnZfj5eAa722XUIbgR3FifErhEwLcdo1wtSDnYvucHXax05PaN6OmuIA6wCLajEErde_SRO5Zx-vg4FdTrrXUIQWQQaREMr120Kfb1m3BBsUAMyINpvVq2dwjfemY_M-HLyl0DtDSAWiD2sYF2agprhGZyjPhetehDmOz_FnpnFc9Gtggs=w1280" alt="Capa do livro Gramática Comentada" width="150" height="220">
+                    <a href="#" class="link-indisponivel">Acesso em Breve</a>
+                </div>
+                
+            </div>
+        </section>
+        
+    </main>
+
+    <div id="feedback-message" aria-live="polite"></div>
+
+    <script>
+        // Adicionando o event listener para o menu rápido
+        document.querySelector('.secao-disciplinas').addEventListener('click', e => {
+            if (e.target.classList.contains('link-disciplina')) {
+                const disciplina = e.target.dataset.disciplina;
+                showFeedback(`Redirecionando para a seção de ${disciplina}...`);
+            }
+        });
+        
+        // Adicionando um listener para os links de acesso em breve
+        document.querySelectorAll('.link-indisponivel').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault(); // Evita a navegação
+                showFeedback("Acesso aos materiais em desenvolvimento!");
+            });
+        });
+
+        function showFeedback(message) {
+            const feedbackMessage = document.getElementById('feedback-message');
+            feedbackMessage.textContent = message;
+            feedbackMessage.classList.add('show');
+            setTimeout(() => feedbackMessage.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

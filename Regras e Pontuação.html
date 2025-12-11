@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Regras e Pontuação - Desafio do Saber Matemática!</title>
+    <style>
+        /* --- ESTILOS GERAIS E FUNDO FUTURISTA (CÓPIA DO CÓDIGO ORIGINAL) --- */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1a26; /* Fundo escuro */
+            color: #ffffff;
+        }
+
+        /* Estilos da Área Principal (main) com Fundo Futurista */
+        .main {
+            margin-left: 260px;
+            padding: 20px;
+            background-color: rgba(16, 30, 47, 0.95); /* Semi-transparente escuro */
+            min-height: 100vh;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden; 
+        }
+
+        .main::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Imagem de fundo lúdica/futurista (Exemplo: circuito ou grade sci-fi) */
+            background-image: url('https://picsum.photos/seed/math-rules-futuristic/1200/800'); 
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1; /* Transparência para não atrapalhar a leitura */
+            z-index: 0;
+        }
+
+        .main > * {
+            position: relative; 
+            z-index: 1;
+        }
+
+        /* Estilos do Menu Lateral (sidenav) */
+        .sidenav {
+            height: 100%;
+            width: 240px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #00bcd4; /* Ciano futurista */
+            padding-top: 20px;
+            color: black;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .sidenav h3 {
+            padding: 0 20px 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+            color: black;
+        }
+
+        .sidenav a {
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #0d1a26; /* Texto escuro */
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .sidenav a:hover {
+            background-color: #0097a7;
+            color: white;
+        }
+        
+        /* --- ESTILOS ESPECÍFICOS DA PÁGINA DE REGRAS --- */
+        
+        h1 {
+            color: #ffeb3b; /* Amarelo neon para destaque */
+            border-bottom: 2px solid #00bcd4;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: #00e676; /* Verde neon para subtítulos */
+            margin-top: 30px;
+        }
+
+        .section-box {
+            background-color: rgba(43, 62, 80, 0.7); /* Fundo sutil para as caixas */
+            border: 1px solid #00bcd4;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .section-box p, .section-box ul {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        ul {
+            list-style-type: '👉 '; /* Ícone divertido para lista */
+            padding-left: 20px;
+        }
+        
+        .important {
+            color: #ff5722; /* Laranja vibrante para ênfase */
+            font-weight: bold;
+        }
+        
+        .math-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.95em;
+        }
+
+        .math-table th, .math-table td {
+            border: 1px solid #0097a7;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .math-table th {
+            background-color: #0d1a26;
+            color: #ffeb3b;
+        }
+        
+    </style>
+</head>
+<body>
+    
+    <div class="sidenav" id="sidenav">
+        <h3>Desafio do Saber Matemática! 🧠</h3>
+        <a href="matematica.html">Início (Jogo)</a>
+        <a href="#" style="background-color: #0097a7; color: white;">Regras e Pontuação</a>
+        <a href="Tabela de Fases Mat.html">Tabela de Fases</a>
+        <a href="Sobre Jogo Mat.html">Sobre o Jogo</a>
+    </div>
+
+    <div class="main">
+        <h1>📑 Regras e Funcionamento do Jogo "Desafio do Saber Matemática!"</h1>
+        <p>Bem-vindo ao centro de comando! Aqui você encontra todas as informações necessárias para dominar o tabuleiro de termos cruzados matemáticos. Prepare-se para o desafio!</p>
+
+        <div class="section-box">
+            <h2>🎯 1. O Objetivo Principal</h2>
+            <p>Seu desafio é simples: "Resolver todas as operações matemáticas" de uma fase e usar os dígitos disponíveis para preencher corretamente o tabuleiro, formando os resultados das expressões.</p>
+            <ul>
+                <li>Cada operação listada na seção "Dicas" tem um resultado único.</li>
+                <li>O resultado de cada operação corresponde a uma sequência de células no tabuleiro (identificadas por cor no código, mas implicitamente agrupadas na tela).</li>
+            </ul>
+        </div>
+
+        <div class="section-box">
+            <h2>🕹️ 2. Mecânica: Arrastar e Soltar (Drag & Drop)</h2>
+            <p>A interação com o tabuleiro é feita exclusivamente através do Painel de Dígitos:</p>
+            <ul>
+                <li><strong>Painel de Dígitos:</strong> Contém todos os dígitos (0 a 9) e caracteres especiais (<span class="important">.</span> e <span class="important">-</span>) necessários para a fase atual. Eles estão embaralhados.</li>
+                <li><strong>Preenchimento:</strong> <span class="important">Arraste e solte</span> um dígito do painel para a célula desejada no tabuleiro.</li>
+                <li><strong>Limpar Célula:</strong> Se você errar ou quiser mudar o preenchimento, basta <span class="important">clicar</span> em uma célula já preenchida para esvaziá-la.</li>
+                <li><span class="important">Lembre-se:</span> O **ponto (.)** é usado para números decimais (ex: 3.33) e o **hífen (-) ** para números negativos (ex: -5).</li>
+            </ul>
+        </div>
+        
+        <div class="section-box">
+            <h2>💯 3. Verificação e Pontuação</h2>
+            <p>O sucesso no jogo depende da precisão dos seus cálculos:</p>
+            <ul>
+                <li><strong>Botão "Verificar Respostas":</strong> Use este botão para verificar todo o tabuleiro. O sistema checará se a sequência de dígitos inserida em cada grupo de células corresponde ao resultado exato da operação associada.</li>
+                <li><strong>Pontuação:</strong> Você recebe um ponto de acerto para cada operação resolvida corretamente no tabuleiro.</li>
+                <li><strong>Avanço de Fase:</strong> Para habilitar o botão <span class="important">"Próxima Fase"</span>, você deve ter **100% de acertos** na rodada atual.</li>
+            </ul>
+        </div>
+        
+        <div class="section-box">
+            <h2>💡 4. Tópicos das 20 Fases</h2>
+            <p>O jogo progride em dificuldade e aborda diversos conceitos matemáticos. Prepare-se para usar diferentes áreas do seu conhecimento:</p>
+            <table class="math-table">
+                <thead>
+                    <tr>
+                        <th>Fases</th>
+                        <th>Nível de Habilidade</th>
+                        <th>Exemplos de Conteúdo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1 - 3</td>
+                        <td>Básico</td>
+                        <td>Operações Fundamentais ($\text{+, -, *, /}$ com números inteiros).</td>
+                    </tr>
+                    <tr>
+                        <td>4 - 9</td>
+                        <td>Intermediário I</td>
+                        <td>Decimais, Porcentagem, Média, Potenciação e Raízes simples.</td>
+                    </tr>
+                    <tr>
+                        <td>10 - 14</td>
+                        <td>Intermediário II</td>
+                        <td>Ordem de Operações (PEMDAS), Números Negativos, Álgebra (Resolver para X).</td>
+                    </tr>
+                    <tr>
+                        <td>15 - 20</td>
+                        <td>Avançado</td>
+                        <td>Arredondamento, Expressões de Múltiplos Passos, Geometria (Área/Volume), Fatores Primos.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>

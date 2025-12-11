@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regras e Pontuação - Jogo Cognitivo</title>
+
+    <style>
+        /* --- ESTILOS GERAIS/FUTURISTAS (CYBERPUNK) --- */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            
+            /* ** MUDANÇA FUTURISTA: Fundo Escuro e Imagem ** */
+            /* Usando um fundo sólido com opacidade se a imagem falhar */
+            background-color: #0d1a2b; 
+            background-image: url('https://wallpapers.com/images/hd/futuristic-background-ekkbk8ew3gnp4olb.jpg'); 
+            background-size: cover;
+            background-attachment: fixed; /* Opcional: Mantém o fundo fixo */
+            background-position: center;
+            color: #e0e0e0; /* Cor de texto mais clara para contraste */
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 220px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            /* Cores Futuras: Azul Marinho com Borda Neon */
+            background-color: rgba(26, 41, 58, 0.95); /* Fundo semi-transparente */
+            padding-top: 20px;
+            color: #00ffcc; /* Verde Neon */
+            box-shadow: 4px 0 15px rgba(0, 255, 204, 0.4); /* Sombra Neon */
+            z-index: 10;
+        }
+
+        .sidenav h3 {
+            border-bottom: 2px solid #00ffcc;
+            padding-bottom: 10px;
+            margin: 0 20px 20px 20px;
+            font-size: 1.5em;
+        }
+
+        .sidenav a {
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #e0e0e0;
+            display: block;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidenav a.active {
+            background-color: #00ffcc;
+            color: #1a293a;
+            font-weight: bold;
+        }
+
+        .sidenav a:hover {
+            background-color: #00ffcc;
+            color: #1a293a;
+        }
+
+        .main {
+            margin-left: 240px;
+            padding: 20px 40px;
+            background-color: rgba(26, 41, 58, 0.95); /* Fundo Semi-Transparente e Escuro */
+            min-height: 100vh;
+            box-shadow: -4px 0 15px rgba(0, 255, 204, 0.4);
+            border-left: 2px solid #ff6600; /* Borda lateral Laranja Neon */
+        }
+
+        /* --- ESTILOS DE CONTEÚDO --- */
+        h1 {
+            color: #ff6600; /* Título em neon laranja */
+            text-shadow: 0 0 8px rgba(255, 102, 0, 0.8);
+            border-bottom: 3px solid #00ffcc;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #00ffcc; /* Subtítulos em neon verde */
+            border-left: 5px solid #ffcc00; /* Destaque lateral amarelo neon */
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+
+        p, ul {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none; /* Remove bolinhas padrão */
+            padding-left: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+
+        ul li::before {
+            content: '>'; 
+            color: #ffcc00; /* Destaque do marcador */
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #1a293a; /* Fundo escuro da tabela */
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
+
+        th, td {
+            border: 1px solid #334e68;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #00ffcc; /* Cabeçalho verde neon */
+            color: #1a293a;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #2c3e50; /* Linhas alternadas */
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="sidenav" id="sidenav">
+        <h3>Menu - Jogo Cognitivo</h3>
+        <a href="palavras.html">Início</a>
+        <a href="Regras e Pontuação.html" class="active">Regras</a>
+        <a href="Sobre jogo Palavras.html">Sobre o Jogo</a>
+    </div>
+
+    <div class="main">
+        <h1>Protocolo de Operação - Regras e Pontuação</h1>
+
+        <p>Bem-vindo ao *Cruzada com Palavras*! Para navegar pela Matriz e completar as 20 Fases do Desafio, é crucial dominar os seguintes protocolos de operação e regras de pontuação.</p>
+
+        ---
+
+        <h2>🎯 Objetivo do Jogo: Matriz de Conexões</h2>
+
+        <p>O objetivo principal é "completar todas as palavras cruzadas" em cada uma das 20 fases. Você deve preencher o tabuleiro de interconexão, arrastando as letras disponíveis do Painel para as células correspondentes, decifrando as palavras com base nas **Pistas de Análise** fornecidas. Apenas a precisão total permitirá o avanço.</p>
+
+        ---
+
+        <h2>🖱️ Jogabilidade (Interface)</h2>
+
+        <ul>
+            <li>Tabuleiros de Matriz: Cada fase apresenta uma nova matriz (tabuleiro) com células a serem preenchidas.</li>
+            <li>Pistas de Análise: As pistas para as palavras são exibidas claramente. O número entre parênteses indica o número de letras da palavra secreta.</li>
+            <li>Painel de Letras: O painel laranja contém as letras necessárias para a fase. As letras são embaralhadas para dificultar a decodificação inicial.</li>
+            <li>Arrastar e Soltar (Drag and Drop):
+                <p>Arraste uma letra do Painel e solte-a em uma célula vazia da Matriz. Você pode substituir uma letra já colocada simplesmente arrastando outra para a mesma célula.</p></li>
+            <li>Limpeza Rápida: O botão "Limpar Quadros" remove instantaneamente todas as letras colocadas na Matriz, permitindo um recomeço rápido para correções de rotas.</li>
+        </ul>
+
+        ---
+
+        <h2>✅ Regras de Pontuação e Verificação</h2>
+
+        <ul>
+            <li>Verificação de Protocolo: O botão "Verificar Respostas" inicia uma varredura do sistema. O jogo só verifica as palavras "após" você pressionar este botão.</li>
+            <li>Pontuação por Palavra: Você recebe crédito por cada palavra que estiver completamente preenchida e correta.</li>
+            <li>Condição de Sucesso da Fase: Para concluir a Matriz atual e avançar para o próximo desafio (Próxima Rodada), você deve atingir "100% de precisão". O sistema exige que "todas" as palavras estejam corretas para liberar o acesso à fase seguinte.</li>
+            <li>Mensagens de Feedback:
+            <ul>
+                <li>Sucesso (Verde Neon): Mensagem de confirmação e liberação de acesso à próxima fase.</li>
+                <li>Erro (Rosa Neon): Indica o número de palavras incorretas. Nenhuma penalidade de tempo é aplicada, mas o avanço é bloqueado.</li>
+            </ul>
+            </li>
+        </ul>
+
+        ---
+
+        <h2>📈 Progressão de Dificuldade (20 Fases)</h2>
+
+        <p>O desafio é projetado para aumentar progressivamente, exigindo maior raciocínio espacial e decodificação das pistas em cada nível.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Fases</th>
+                    <th>Aproximação de Palavras</th>
+                    <th>Complexidade da Matriz</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1 a 5</td>
+                    <td>3 a 7 Palavras</td>
+                    <td>Matrizes menores (Ex: 6x10 a 8x11). Introdução ao sistema de interconexão.</td>
+                </tr>
+                <tr>
+                    <td>6 a 10</td>
+                    <td>Mais de 8 Palavras</td>
+                    <td>Aumento do número de palavras e da densidade das interconexões.</td>
+                </tr>
+                <tr>
+                    <td>11 a 15</td>
+                    <td>Maior Concentração de Palavras</td>
+                    <td>Matrizes maiores e mais complexas, exigindo maior atenção à sobreposição das palavras.</td>
+                </tr>
+                <tr>
+                    <td>16 a 20</td>
+                    <td>Nível de Desafio Máximo</td>
+                    <td>Matrizes grandes e densas (crescendo até 20+ palavras em níveis finais). Requer estratégia e organização avançada.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

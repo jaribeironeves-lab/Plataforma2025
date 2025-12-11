@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Tabela de Fases - Desafio do Saber Matemática!</title>
+    <style>
+        /* --- ESTILOS GERAIS E FUNDO FUTURISTA (CÓPIA DO CÓDIGO ORIGINAL) --- */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1a26; /* Fundo escuro */
+            color: #ffffff;
+        }
+
+        /* Estilos da Área Principal (main) com Fundo Futurista */
+        .main {
+            margin-left: 260px;
+            padding: 20px;
+            background-color: rgba(16, 30, 47, 0.95); /* Semi-transparente escuro */
+            min-height: 100vh;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden; 
+        }
+
+        .main::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Imagem de fundo lúdica/futurista */
+            background-image: url('https://picsum.photos/seed/math-phases-futuristic/1200/800'); 
+            background-size: cover;
+            background-position: center;
+            opacity: 0.1; /* Transparência para não atrapalhar a leitura */
+            z-index: 0;
+        }
+
+        .main > * {
+            position: relative; 
+            z-index: 1;
+        }
+
+        /* Estilos do Menu Lateral (sidenav) */
+        .sidenav {
+            height: 100%;
+            width: 240px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #00bcd4; /* Ciano futurista */
+            padding-top: 20px;
+            color: black;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .sidenav h3 {
+            padding: 0 20px 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+            color: black;
+        }
+
+        .sidenav a {
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #0d1a26; /* Texto escuro */
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .sidenav a:hover {
+            background-color: #0097a7;
+            color: white;
+        }
+        
+        /* --- ESTILOS ESPECÍFICOS DA TABELA DE FASES --- */
+        
+        h1 {
+            color: #ffeb3b; /* Amarelo neon para destaque */
+            border-bottom: 2px solid #00bcd4;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+        
+        /* Estilo da Tabela Principal */
+        .phases-table {
+            width: 100%;
+            border-collapse: separate; /* Permite border-radius */
+            border-spacing: 0 10px; /* Espaço entre as linhas */
+        }
+
+        .phases-table th, .phases-table td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        .phases-table th {
+            background-color: #0d1a26;
+            color: #00e676; /* Verde neon */
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #00bcd4;
+        }
+
+        .phases-table tr {
+            background-color: rgba(43, 62, 80, 0.9); /* Fundo da linha mais escuro */
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .phases-table tr:hover {
+            background-color: #1e3a47; /* Escurece no hover */
+        }
+        
+        .phases-table td:first-child {
+            font-weight: bold;
+            color: #ffeb3b; /* Amarelo neon para o número da fase */
+            text-align: center;
+        }
+        
+        /* Estilos de nível de dificuldade */
+        .level-basic { color: #00e676; } /* Verde - Fácil */
+        .level-intermedio { color: #ffeb3b; } /* Amarelo - Médio */
+        .level-avancado { color: #ff5722; } /* Laranja/Vermelho - Difícil */
+
+        /* Estilo para a descrição das operações */
+        .operation-summary {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="sidenav" id="sidenav">
+        <h3>Desafio do Saber Matemática! 🧠</h3>
+        <a href="matematica.html">Início (Jogo)</a>
+        <a href="Regras e Pontuação.html">Regras e Pontuação</a>
+        <a href="#" style="background-color: #0097a7; color: white;">Tabela de Fases</a>
+        <a href="sobre Jogo Mat.html">Sobre o Jogo</a>
+    </div>
+
+    <div class="main">
+        <h1>📊 Tabela de Fases e Níveis de Dificuldade</h1>
+        <p>Abaixo está o mapa com 09 das 20 fases do Desafio do Saber, detalhando o tipo de cálculo que você enfrentará. O conhecimento é a sua chave!</p>
+
+        <table class="phases-table">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">Fase</th>
+                    <th style="width: 20%;">Nível</th>
+                    <th>Foco da Operação</th>
+                    <th>Exemplo de Expressão</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td class="level-basic">BÁSICO</td><td class="operation-summary">Soma e Subtração Simples (Inteiros).</td><td>10 + 5</td></tr>
+                <tr><td>2</td><td class="level-basic">BÁSICO</td><td class="operation-summary">Soma e Multiplicação Múltipla.</td><td>7 \ 3</td></tr>
+                <tr><td>3</td><td class="level-basic">BÁSICO</td><td class="operation-summary">Multiplicação e Divisão (Resultados Inteiros).</td><td>9 / 9, 50 / 5</td></tr>
+                <tr><td>4</td><td class="level-basic">BÁSICO</td><td class="operation-summary">Divisão com Decimal (Uso do Ponto '.').</td><td>1 / 2, 5 - 1.5</td></tr>
+                <tr><td>5</td><td class="level-basic">BÁSICO</td><td class="operation-summary">Potenciação e Raiz Quadrada.</td><td>{4^2, /3}$</td></tr>
+
+                <tr><td>6</td><td class="level-intermedio">INTERMÉDIO I</td><td class="operation-summary">Ordem de Operações (PEMDAS/BODMAS).</td><td>2 + 3 / 2</td></tr>
+                <tr><td>7</td><td class="level-intermedio">INTERMÉDIO I</td><td class="operation-summary">Introdução a Números Negativos (Uso do Hífen '-').</td><td>20 - 5/ 2 + 2</td></tr>
+                <tr><td>8</td><td class="level-intermedio">INTERMÉDIO I</td><td class="operation-summary">Média Aritmética e Porcentagem Simples.</td><td>Média de 10, 20, 30</td></tr>
+                <tr><td>9</td><td class="level-intermedio">INTERMÉDIO I</td><td class="operation-summary">Frações (Conversão para Decimal Simples).</td><td>3 / 4, 1 / 5</td></tr>
+                <tr><td>10</td><td class="level

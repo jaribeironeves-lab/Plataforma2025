@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Palavras Cruzadas com Múltiplas Fases - Edição Cyber</title>
+
+    <style>
+        /* --- ESTILOS GERAIS/FUTURISTAS (CYBERPUNK) --- */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            
+            /* ** MUDANÇA FUTURISTA: Fundo Escuro e Imagem ** */
+            background-color: rgb(252, 252, 252), 225, 226; /* Azul escuro/preto de fundo */
+            background-image: url('https://wallpapers.com/images/hd/futuristic-background-ekkbk8ew3gnp4olb.jpg'); 
+            background-size: cover;
+            background-position: center;
+            color: #e0e0e0; /* Cor de texto mais clara para contraste */
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 220px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            /* Cores Futuras: Azul Marinho com Borda Neon */
+            background-color: rgb(240, 241, 241, 250, 250, 226, 228);
+            padding-top: 20px;
+            color: #00ffcc; /* Verde Neon */
+            box-shadow: 4px 0 15px rgba(0, 255, 204, 0.4); /* Sombra Neon */
+            z-index: 10;
+        }
+
+        .sidenav h3 {
+            border-bottom: 2px solid #00ffcc;
+            padding-bottom: 10px;
+            margin: 0 20px 20px 20px;
+        }
+
+        .sidenav a {
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #e0e0e0;
+            display: block;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidenav a:hover {
+            background-color: #00ffcc;
+            color: rgb(184, 189, 196);
+        }
+
+        .main {
+            margin-left: 240px;
+            padding: 20px;
+        }
+        /* --- ESTILOS DE COMPONENTES --- */
+
+        #tituloFase {
+            color: #ff6600; /* Título em neon laranja */
+        }
+
+        .hints {
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #00ffcc; /* Borda Neon */
+            background-color: #2d3f52; /* Fundo escuro */
+            border-radius: 5px;
+            color: #e0e0e0;
+        }
+
+        .game-area {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        .crossword {
+            display: grid;
+            grid-template-columns: repeat(10, 35px);
+            grid-auto-rows: 35px;
+            grid-gap: 2px;
+            border: 2px solid #00ffcc; /* Borda Neon */
+            padding: 5px;
+            background-color: #1e3146; /* Fundo do tabuleiro */
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
+
+        .cell {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #00ffcc;
+            text-align: center;
+            line-height: 35px;
+            font-size: 16px;
+            background-color: #334e68; /* Célula com cor escura */
+            color: #f9f9f9;
+            user-select: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .empty-cell {
+            background-color: transparent;
+            border: none;
+            cursor: default;
+        }
+
+        .panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            max-width: 250px;
+            padding: 10px;
+            border: 1px solid #ffcc00; /* Neon Laranja/Amarelo */
+            background-color: #1a293a;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+        }
+
+        .letter {
+            width: 35px;
+            height: 35px;
+            background-color: #ff6600; /* Laranja Vívido para as letras */
+            color: white;
+            text-align: center;
+            line-height: 35px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: grab;
+            box-shadow: 1px 1px 5px rgba(255, 102, 0, 0.7);
+        }
+
+        .cell.over {
+            background-color: #4CAF50; /* Destaque de arrasto verde */
+        }
+
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        #result.success { color: #00ffcc; } /* Neon Verde */
+        #result.error { color: #ff0066; } /* Neon Rosa */
+
+        button {
+            margin: 5px 10px 5px 0;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+        }
+
+        #verificarBtn {
+            background-color: #007bff;
+            color: white;
+            border: 2px solid #00ffcc;
+            box-shadow: 0 0 5px #00ffcc;
+        }
+        
+        #limparBtn {
+            background-color: #ffc107;
+            color: #333;
+            border: 2px solid #ffcc00;
+            box-shadow: 0 0 5px #ffcc00;
+        }
+        
+        #proximaRodadaBtn {
+            background-color: #28a745;
+            color: white;
+            border: 2px solid #ff0066;
+            box-shadow: 0 0 5px #ff0066;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .footer-image {
+            margin-top: 30px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidenav" id="sidenav">
+        <h3>Menu - Jogo Cognitivo</h3>
+        <a href="index.html">Início</a>
+        <a href="Regra Palavras.html">Regras</a>
+        <a href="Sobre Jogo palavras.html">Sobre o Jogo</a>
+    </div>
+
+    <div class="main">
+        <h1 id="tituloFase">Palavras Cruzadas - Fase 1</h1>
+        <h2><p>Arraste as letras para preencher o tabuleiro e descubra as palavras!</p></h2>
+
+        <div class="hints" id="hints">
+            </div>
+
+        <div class="game-area">
+            <div class="crossword" id="crossword">
+                </div>
+
+            <div class="panel" id="panel">
+                </div>
+        </div>
+
+        <button id="verificarBtn" onclick="verificar()">Verificar Respostas</button>
+        <button id="limparBtn" onclick="limpar()">Limpar Quadros</button>
+        <button id="proximaRodadaBtn" onclick="proximaRodada()">Próxima Rodada</button>
+
+        <div class="result" id="result"></div>
+        <div class="result" id="estatisticas"></div>
+
+        <div class="footer-image">
+            
+        </div>
+    </div>
+
+    <script>
+        let currentPhase = 0;
+        let acertos = 0;
+        let draggedLetter = null;
+
+        // --- DADOS PARA AS 20 FASES ---
+        const phases = [
+            // Fase 1: 3 Palavras
+            {
+                palavras: [
+                    { palavra: 'CASA', pista: '1. Local onde moramos' },
+                    { palavra: 'SOL', pista: '2. Astro que ilumina o dia' },
+                    { palavra: 'RIO', pista: '3. Curso natural de água' }
+                ],
+                layout: [
+                    [1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 2, 2, 2, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 3, 3, 3, 0, 0, 0]
+                ],
+                gridSize: [6, 10], 
+                letrasDisponiveis: 'CASOLIR'
+            },
+            // Fase 2: 4 Palavras
+            {
+                palavras: [
+                    { palavra: 'FOGO', pista: '1. Produz calor e luz, mas queima' },
+                    { palavra: 'GELO', pista: '2. Água em estado sólido' },
+                    { palavra: 'VERDE', pista: '3. Cor predominante da natureza' },
+                    { palavra: 'LUZ', pista: '4. O oposto da escuridão' }
+                ],
+                layout: [
+                    [1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 2, 2, 2, 2, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [3, 3, 3, 3, 3, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 4, 4, 4, 0, 0, 0]
+                ],
+                gridSize: [7, 10],
+                letrasDisponiveis: 'FOGELVRDUZS'
+            },
+            // Fase 3: 5 Palavras
+            {
+                palavras: [
+                    { palavra: 'LIVRO', pista: '1. Objeto com páginas para leitura' },
+                    { palavra: 'MESA', pista: '2. Móvel com tampo e pernas' },
+                    { palavra: 'PATO', pista: '3. Ave aquática que faz "quack"' },
+                    { palavra: 'CEU', pista: '4. Acima de nós, onde estão as nuvens' },
+                    { palavra: 'PEIXE', pista: '5. Animal que vive na água' }
+                ],
+                layout: [
+                    [1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 2, 2, 2, 2, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 3, 3, 3, 3, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                    [4, 4, 4, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 5, 5, 5, 5, 5]
+                ],
+                gridSize: [8, 10],
+                letrasDisponiveis: 'SLIVROMEPATCUX'
+            },
+            // Fase 4: 6 Palavras
+            { palavras: [{ palavra: 'AMOR', pista: '1. Sentimento de carinho' }, { palavra: 'PAZ', pista: '2. Ausência de conflito' }, { palavra: 'BOLA', pista: '3. Objeto esférico para esportes' }, { palavra: 'FLOR', pista: '4. Parte colorida da planta' }, { palavra: 'VOO', pista: '5. Ato de voar' }, { palavra: 'CHAVE', pista: '6. Abre portas' }], layout: [[1,1,1,1,0,0,0,0,0,0],[0,0,0,0,2,2,2,0,0,0],[3,3,3,3,0,0,0,0,0,0],[0,0,0,0,0,4,4,4,4,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,5,5,5,0,0,0],[6,6,6,6,6,0,0,0,0,0]], gridSize: [7, 10], letrasDisponiveis: 'AMORPAZBLFI' },
+
+            // Fase 5: 7 Palavras
+            { palavras: [{ palavra: 'MUSICA', pista: '1. Sons organizados' }, { palavra: 'ARTE', pista: '2. Expressão da criatividade' }, { palavra: 'PULGA', pista: '3. Pequeno parasita saltador' }, { palavra: 'CHUVA', pista: '4. Água caindo do céu' }, { palavra: 'PORTA', pista: '5. Entrada de um local' }, { palavra: 'VERME', pista: '6. Pequeno animal rastejante' }, { palavra: 'AGUA', pista: '7. Essencial para a vida' }], layout: [[1,1,1,1,1,1,0,0,0,0],[0,0,0,0,0,0,2,2,2,2],[3,3,3,3,3,0,0,0,0,0],[0,0,0,0,0,4,4,4,4,4],[0,0,0,0,0,0,0,0,0,0],[5,5,5,5,5,0,0,0,0,0],[0,0,0,0,0,6,6,6,6,6],[0,0,0,0,0,0,0,7,7,7,7]], gridSize: [8, 11], letrasDisponiveis: 'MUSCARTEPLGVIHO' },
+            
+            // Fases 6 a 20 como placeholders
+            ...Array.from({ length: 15 }, (_, i) => ({
+                palavras: Array.from({ length: 8 + i }, (_, j) => ({
+                    palavra: `PALAVRA${i*15 + j + 1}`.slice(0, 8), 
+                    pista: `${j + 1}. Pista placeholder para a Fase ${i + 6}`
+                })),
+                layout: Array.from({ length: 10 + i }, () => Array(15).fill(0)),
+                gridSize: [10 + i, 15],
+                letrasDisponiveis: 'ABCDEFGHIJ'
+            }))
+        ];
+
+
+        // --- FUNÇÕES DE LÓGICA DO JOGO ---
+
+        function loadPhase(index) {
+            if (index < 0 || index >= phases.length) {
+                document.getElementById('main').innerHTML = '<h2>Fim do Jogo! Parabéns! Seu progresso foi salvo na Matriz Central.</h2>';
+                return;
+            }
+
+            currentPhase = index;
+            acertos = 0;
+            const phase = phases[currentPhase];
+
+            // 1. Atualizar Título
+            document.getElementById('tituloFase').textContent = `Palavras Cruzadas - Fase ${currentPhase + 1} - Desafio de Matriz`;
+
+            // 2. Carregar Pistas
+            const hintsDiv = document.getElementById('hints');
+            hintsDiv.innerHTML = phase.palavras.map((p, i) => `<div>${p.pista} (${p.palavra.length} letras)</div>`).join('');
+
+            // 3. Montar Tabuleiro (Crossword)
+            const crosswordDiv = document.getElementById('crossword');
+            crosswordDiv.innerHTML = '';
+            crosswordDiv.style.gridTemplateColumns = `repeat(${phase.gridSize[1]}, 35px)`;
+
+            let cellCounter = 1;
+            for (let r = 0; r < phase.layout.length; r++) {
+                for (let c = 0; c < phase.layout[r].length; c++) {
+                    const cell = document.createElement('div');
+                    const wordIndex = phase.layout[r][c]; // 0: vazio, 1-N: índice da palavra
+
+                    if (wordIndex > 0) {
+                        cell.classList.add('cell');
+                        cell.dataset.pos = cellCounter++;
+                        cell.dataset.word = wordIndex;
+                    } else {
+                        cell.classList.add('empty-cell');
+                    }
+                    crosswordDiv.appendChild(cell);
+                }
+            }
+
+            // 4. Carregar Painel de Letras
+            const panelDiv = document.getElementById('panel');
+            panelDiv.innerHTML = '';
+            // Cria um array de letras a partir da string e as embaralha
+            const shuffledLetters = phase.letrasDisponiveis.split('').sort(() => 0.5 - Math.random());
+            
+            shuffledLetters.forEach(letterChar => {
+                const letter = document.createElement('div');
+                letter.classList.add('letter');
+                letter.textContent = letterChar;
+                letter.draggable = true;
+                panelDiv.appendChild(letter);
+            });
+
+            // 5. Reinicializar Resultados e Listeners
+            document.getElementById('result').textContent = '';
+            document.getElementById('estatisticas').textContent = '';
+            setupDragAndDrop();
+        }
+
+        function setupDragAndDrop() {
+            const letters = document.querySelectorAll('.letter');
+            const cells = document.querySelectorAll('.cell');
+
+            letters.forEach(letter => {
+                letter.addEventListener('dragstart', (e) => {
+                    // Armazena o texto para que a célula de destino possa pegá-lo
+                    e.dataTransfer.setData('text/plain', letter.textContent);
+                    draggedLetter = letter.textContent;
+                });
+            });
+
+            cells.forEach(cell => {
+                cell.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    cell.classList.add('over');
+                });
+
+                cell.addEventListener('dragleave', () => {
+                    cell.classList.remove('over');
+                });
+
+                cell.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    // Obtém a letra do dataTransfer
+                    const letterChar = e.dataTransfer.getData('text/plain');
+                    cell.textContent = letterChar;
+                    cell.classList.remove('over');
+                });
+            });
+        }
+
+        function verificar() {
+            const phase = phases[currentPhase];
+            let palavrasCorretas = 0;
+            const respostas = {};
+            const cells = document.querySelectorAll('.cell');
+
+            // 1. Coletar respostas por Palavra
+            cells.forEach(cell => {
+                const wordIndex = cell.dataset.word;
+                if (wordIndex) {
+                    if (!respostas[wordIndex]) {
+                        respostas[wordIndex] = '';
+                    }
+                    // Certifica-se de que a célula foi preenchida
+                    respostas[wordIndex] += cell.textContent.trim().toUpperCase();
+                }
+            });
+
+            // 2. Comparar com Gabarito
+            phase.palavras.forEach((item, index) => {
+                const wordIndex = index + 1;
+                // A resposta só é válida se tiver o mesmo comprimento do gabarito e estiver correta
+                if (respostas[wordIndex] && respostas[wordIndex] === item.palavra) {
+                    palavrasCorretas++;
+                }
+            });
+
+            acertos = palavrasCorretas;
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.remove('success', 'error');
+
+            if (acertos === phase.palavras.length) {
+                resultDiv.textContent = '✅ Verificação de Matriz Concluída. Todas as palavras estão corretas! Avançar.';
+                resultDiv.classList.add('success');
+            } else {
+                resultDiv.textContent = `❌ ${acertos} de ${phase.palavras.length} palavras corretas. Erros de codificação detectados. Tente novamente.`;
+                resultDiv.classList.add('error');
+            }
+        }
+
+        function limpar() {
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.textContent = '';
+            });
+            document.getElementById('result').textContent = '';
+            document.getElementById('estatisticas').textContent = '';
+        }
+
+        function proximaRodada() {
+            const phase = phases[currentPhase];
+            const estatisticas = document.getElementById('estatisticas');
+            const porcentagem = ((acertos / phase.palavras.length) * 100).toFixed(2);
+            estatisticas.textContent = `Estatísticas da Fase ${currentPhase + 1}: ${acertos} de ${phase.palavras.length} palavras (${porcentagem}%)`;
+
+            // Só avança se acertar todas
+            if (acertos === phase.palavras.length) {
+                loadPhase(currentPhase + 1);
+            } else {
+                alert('O Protocolo de Segurança exige que todas as palavras sejam corretas para passar para a próxima fase!');
+            }
+        }
+
+        // Iniciar o jogo na primeira fase
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPhase(0);
+        });
+    </script>
+</body>
+
+</html>

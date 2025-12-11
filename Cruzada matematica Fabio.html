@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jogo Neon Competição Avançado</title>
+<style>
+body { margin:0; font-family:'Comic Sans MS', cursive, sans-serif; background:#1a1a1a; color:#fff; transition:0.3s; }
+header { text-align:center; padding:20px; font-size:2em; font-weight:bold; background:linear-gradient(90deg,#ff6ec7,#42d1f5); text-shadow:0 0 5px #fff,0 0 10px #ff6ec7,0 0 20px #42d1f5; }
+button { padding:10px 18px; margin:8px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; color:#fff; background:linear-gradient(90deg,#ff6ec7,#42d1f5); transition:0.3s; }
+button:hover { background:linear-gradient(90deg,#42d1f5,#ff6ec7); box-shadow:0 0 15px #fff; }
+.screen { display:none; min-height:80vh; flex-direction:column; align-items:center; justify-content:center; }
+.screen.active { display:flex; }
+.level-node, .player-node { width:140px; height:50px; line-height:50px; border-radius:10px; background:linear-gradient(90deg,#ff6ec7,#42d1f5); text-align:center; font-weight:bold; cursor:pointer; margin:10px; }
+.level-node:hover, .player-node:hover { box-shadow:0 0 20px #42d1f5; }
+#game-container { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; }
+#game-panel { display:flex; flex-direction:column; align-items:center; }
+.crossword { display:grid; grid-gap:5px; background:#111; padding:15px; border-radius:10px; }
+.cell { width:50px; height:50px; line-height:50px; text-align:center; font-weight:bold; font-size:22px; border-radius:6px; background:#2222ff33; cursor:pointer; box-shadow:0 0 5px #42d1f5; transition:0.2s; }
+.cell:hover { background:#2222ff66; }
+.number-panel { display:flex; flex-wrap:wrap; gap:8px; max-width:270px; margin-top:15px; }
+.number { width:50px; height:50px; line-height:50px; text-align:center; font-size:20px; border-radius:8px; background:#ff6ec7; cursor:pointer; box-shadow:0 0 5px #fff; transition:0.2s; }
+.number:hover { background:#42d1f5; box-shadow:0 0 20px #42d1f5; }
+.selected-panel-number { outline:3px solid #00ffea; }
+.result { margin-top:15px; padding:10px; border-radius:5px; font-weight:bold; font-size:1.2em; }
+.success { color:#00ff7f; background-color:#003300aa; }
+.error { color:#ff4500; background-color:#330000aa; }
+#ranking-panel { width:180px; background:#111; padding:10px; border-radius:10px; box-shadow:0 0 10px #fff; }
+#ranking-panel h3 { text-align:center; margin:5px 0; }
+.rank-entry { margin:5px 0; font-weight:bold; }
+#credits { font-size:1.5em; text-align:center; animation:scrollCredits 20s linear forwards; }
+@keyframes scrollCredits { 0% { transform:translateY(100%);} 100% { transform:translateY(-100%);} }
+</style>
+</head>
+<body>
+
+<header>Jogo de Matemática Neon Avançado</header>
+
+<div class="screen active" id="player-select">
+    <h2>Escolha seu jogador</h2>
+    <div class="player-node" onclick="selectPlayer(1)">Jogador 1</div>
+    <div class="player-node" onclick="selectPlayer(2)">Jogador 2</div>
+    <div class="player-node" onclick="selectPlayer(3)">Jogador 3</div>
+</div>
+
+<div class="screen" id="level-select">
+    <h2>Escolha o nível</h2>
+    <div class="level-node" onclick="startGame('medium')">Médio</div>
+    <div class="level-node" onclick="startGame('hard')">Difícil</div>
+</div>
+
+<div class="screen" id="game">
+    <div id="game-container">
+        <div id="game-panel">
+            <div class="equations-bar" id="equations-bar"></div>
+            <div class="crossword" id="crossword"></div>
+            <div class="number-panel" id="panel"></div>
+            <div class="settings">
+                <button onclick="backToLevel()">⬅ Voltar</button>
+                <button onclick="toggleDarkMode()">Modo Claro/Escuro</button>
+                <label>Luz: <input type="range" min="50" max="150" value="100" onchange="adjustBrightness(this.value)"></label>
+                <button onclick="verificar()">Verificar</button>
+                <button onclick="showExplanation()">Explicação</button>
+                <button onclick="nextPhase()">Próxima Fase</button>
+            </div>
+            <div id="result" class="result"></div>
+        </div>
+        <div id="ranking-panel">
+            <h3>Ranking</h3>
+            <div id="ranking-list"></div>
+        </div>
+    </div>
+</div>
+
+<div class="screen" id="winner-screen">
+    <h2>🏆 Vencedor da competição 🏆</h2>
+    <p id="winner-name"></p>
+    <button onclick="showCredits()">Ver Créditos</button>
+</div>
+
+<div class="screen" id="credits">
+    <p>🎉 Jogo criado por: Fabio</p>
+    <p>Por que jogar este jogo?</p>
+    <p>✅ Melhora raciocínio lógico</p>
+    <p>✅ Treina matemática divertida</p>
+    <p>✅ Compete com amigos e aprende jogando</p>
+    <p>Obrigado por jogar! 🏆</p>
+</div>
+
+<script>
+let levels = {
+    medium: [
+        {eq:'45+78',res:123}, {eq:'156-87',res:69}, {eq:'12*8',res:96}, {eq:'144/12',res:12},
+        {eq:'x²-5x+6=0 (Bhaskara)',res:[2,3]}, {eq:'23*17',res:391}, {eq:'225/15',res:15},
+        {eq:'x²-7x+10=0 (Bhaskara)',res:[2,5]}, {eq:'81+142',res:223}, {eq:'196-87',res:109}
+    ],
+    hard: [
+        {eq:'123+457',res:580}, {eq:'789-345',res:444}, {eq:'23*17',res:391}, {eq:'144/12',res:12},
+        {eq:'x²-7x+10=0 (Bhaskara)',res:[2,5]}, {eq:'156*12',res:1872}, {eq:'360/15',res:24},
+        {eq:'x²-12x+35=0 (Bhaskara)',res:[5,7]}, {eq:'512+389',res:901}, {eq:'841-423',res:418}
+    ]
+};
+
+let currentPlayer=1, playerScores=[0,0,0], difficulty='', currentPhase=0, selectedNumber=null, locked=false;
+
+function selectPlayer(n){
+    currentPlayer=n;
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('level-select').classList.add('active');
+}
+
+function backToLevel(){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('level-select').classList.add('active');
+}
+
+function startGame(level){
+    difficulty=level;
+    currentPhase=0;
+    selectedNumber=null;
+    locked=false;
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('game').classList.add('active');
+    loadPhase();
+    updateRanking();
+}
+
+function loadPhase(){
+    locked=false;
+    const phase = levels[difficulty][currentPhase];
+    const bar = document.getElementById('equations-bar');
+    const crossword = document.getElementById('crossword');
+    const panel = document.getElementById('panel');
+    bar.innerHTML=''; crossword.innerHTML=''; panel.innerHTML=''; phase.cells=[];
+
+    const eqDiv = document.createElement('div');
+    eqDiv.classList.add('equation');
+    eqDiv.textContent = phase.eq+' = ?';
+    bar.appendChild(eqDiv);
+
+    let digits = Array.isArray(phase.res)?phase.res.map(String):phase.res.toString().split('');
+    crossword.style.gridTemplateColumns = `repeat(${digits.length},50px)`;
+    digits.forEach(d=>{
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        crossword.appendChild(cell);
+        phase.cells.push(cell);
+    });
+
+    for(let n=0;n<=9;n++){
+        const numDiv = document.createElement('div');
+        numDiv.classList.add('number');
+        numDiv.textContent=n;
+        numDiv.onclick=()=>selectNumber(n,numDiv);
+        panel.appendChild(numDiv);
+    }
+
+    document.getElementById('result').textContent = `Jogador ${currentPlayer} - Pergunta ${currentPhase+1} de 10`;
+}
+
+function selectNumber(n,div){
+    if(locked) return; 
+    document.querySelectorAll('.number').forEach(el=>el.classList.remove('selected-panel-number'));
+    div.classList.add('selected-panel-number');
+    selectedNumber=n;
+}
+
+document.addEventListener('click',e=>{
+    if(e.target.classList.contains('cell') && selectedNumber!==null && !locked){
+        e.target.textContent=selectedNumber;
+        document.querySelectorAll('.number').forEach(el=>el.classList.remove('selected-panel-number'));
+        selectedNumber=null;
+    }
+});
+
+function verificar(){
+    const phase = levels[difficulty][currentPhase];
+    const resDiv = document.getElementById('result');
+    let correct=false;
+    if(Array.isArray(phase.res)){
+        correct = phase.cells.every((c,i)=>c.textContent==phase.res[i]);
+    } else {
+        correct = phase.cells.every((c,i)=>c.textContent==phase.res.toString()[i]);
+    }
+    resDiv.classList.remove('success','error');
+    if(correct){
+        playerScores[currentPlayer-1]+=10;
+        resDiv.textContent=`✅ Correto! Pontos: ${playerScores[currentPlayer-1]}`;
+        resDiv.classList.add('success');
+        locked=true;
+    } else{
+        resDiv.textContent=`❌ Incorreto. Pontos: ${playerScores[currentPlayer-1]}`;
+        resDiv.classList.add('error');
+    }
+    updateRanking();
+}
+
+function nextPhase(){
+    const phase = levels[difficulty][currentPhase];
+    let phaseCorrect=false;
+    if(Array.isArray(phase.res)){
+        phaseCorrect = phase.cells.every((c,i)=>c.textContent==phase.res[i]);
+    } else {
+        phaseCorrect = phase.cells.every((c,i)=>c.textContent==phase.res.toString()[i]);
+    }
+    if(!phaseCorrect){
+        alert('Preencha a resposta corretamente antes de avançar!');
+        return;
+    }
+
+    currentPhase++;
+
+    if(currentPhase>=10){
+        if(currentPlayer<3){
+            currentPlayer++;
+            currentPhase=0;
+            startGame(difficulty);
+        } else {
+            showWinner();
+        }
+    } else {
+        loadPhase();
+    }
+}
+
+function showExplanation(){
+    const phase = levels[difficulty][currentPhase];
+    alert(`Equação: ${phase.eq}\nResultado: ${Array.isArray(phase.res)?phase.res.join(','):phase.res}`);
+}
+
+function updateRanking(){
+    const rankDiv = document.getElementById('ranking-list');
+    rankDiv.innerHTML='';
+    const maxScore = Math.max(...playerScores);
+    for(let i=0;i<3;i++){
+        let icon='';
+        if(playerScores[i]===maxScore){
+            icon=i===0?'🥇':i===1?'🥈':'🥉';
+        }
+        rankDiv.innerHTML+=`<div class="rank-entry">${icon} Jogador ${i+1}: ${playerScores[i]} pts</div>`;
+    }
+}
+
+function showWinner(){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('winner-screen').classList.add('active');
+    const maxScore = Math.max(...playerScores);
+    const winners = [];
+    playerScores.forEach((score,i)=>{if(score===maxScore) winners.push(`Jogador ${i+1}`);});
+    document.getElementById('winner-name').textContent = `Parabéns: ${winners.join(', ')}!`;
+}
+
+let darkMode=true;
+function toggleDarkMode(){
+    if(darkMode){document.body.style.backgroundColor='#fff'; document.body.style.color='#000'; darkMode=false;}
+    else{document.body.style.backgroundColor='#1a1a1a'; document.body.style.color='#fff'; darkMode=true;}
+}
+
+function adjustBrightness(val){document.body.style.filter=`brightness(${val}%)`;}
+
+function showCredits(){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById('credits').classList.add('active');
+}
+</script>
+
+</body>
+</html>
